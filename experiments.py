@@ -380,8 +380,8 @@ class experiments:
             self.plot_cluster_results(data_set, 'K-Means', kmeans_results)
             self.plot_cluster_results(data_set, 'Expectation Maximization', em_results)
 
-            # best_kmeans_n = kmeans_results.query('silhouette == silhouette.max()').clusters[0]
-            # best_em_n = em_results.query('silhouette == silhouette.max()').clusters[0]
+            best_kmeans_n = kmeans_results.query('silhouette == silhouette.max()').clusters[0]
+            best_em_n = em_results.query('silhouette == silhouette.max()').clusters[0]
 
             if data_set == 'Heart Data':
                 x_vars = ['AgeCategory', 'Sex', 'Smoking', 'BMI', 'PhysicalActivity']
@@ -390,7 +390,7 @@ class experiments:
                 x_vars = ['Rainfall', 'Sunshine', 'RainToday', 'Temp3pm', 'Humidity3pm']
                 y_vars = x_vars
 
-            kmeans = KMeans(init="k-means++", n_clusters=2, n_init=10, random_state=self.random_seed)
+            kmeans = KMeans(init="k-means++", n_clusters=best_kmeans_n, n_init=10, random_state=self.random_seed)
             kmeans.fit(scaled_data)
             kmeans_pred = kmeans.predict(scaled_data)
             data_kmeans = data.copy()
@@ -403,14 +403,14 @@ class experiments:
             self.write_to_output(100 * "_")
             self.write_to_output("K-Means Centers")
             self.write_to_output(kmeans_centers.to_string(header=True, index=False))
+            kmeans_cm = pd.DataFrame(metrics.cluster.contingency_matrix(labels, kmeans_pred))
 
-            kmeans_cm = pd.DataFrame(metrics.cluster.pair_confusion_matrix(labels, kmeans_pred))
             self.write_to_output(100 * "_")
-            self.write_to_output("K-Means Confusion Matrix")
+            self.write_to_output("K-Means Contingency Matrix")
             self.write_to_output(kmeans_cm.to_string(header=True, index=False))
             self.write_to_output(100 * "_")
 
-            em = GaussianMixture(n_components=2, random_state=self.random_seed)
+            em = GaussianMixture(n_components=best_em_n, random_state=self.random_seed)
             em.fit(scaled_data)
             em_pred = em.predict(scaled_data)
             data_em = data.copy()
@@ -424,9 +424,9 @@ class experiments:
             self.write_to_output("EM Means")
             self.write_to_output(em_means.to_string(header=True, index=False))
 
-            em_cm = pd.DataFrame(metrics.cluster.pair_confusion_matrix(labels, em_pred))
+            em_cm = pd.DataFrame(metrics.cluster.contingency_matrix(labels, em_pred))
             self.write_to_output(100 * "_")
-            self.write_to_output("EM Confusion Matrix")
+            self.write_to_output("EM Contingency Matrix")
             self.write_to_output(em_cm.to_string(header=True, index=False))
             self.write_to_output(100 * "_")
 
