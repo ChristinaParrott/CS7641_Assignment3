@@ -8,7 +8,8 @@ from sklearn.compose import make_column_transformer
 from sklearn.model_selection import ShuffleSplit, train_test_split, learning_curve, validation_curve, GridSearchCV
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, FastICA
+from sklearn.random_projection import SparseRandomProjection
 from sklearn.pipeline import make_pipeline
 from sklearn import metrics
 import seaborn as sns
@@ -333,6 +334,68 @@ class experiments:
         plt.grid()
         plt.legend(loc="best")
 
+    def run_pca(self, x, data_set):
+        pca = PCA(random_state=self.random_seed)
+        x_pca = pca.fit_transform(x)
+        exp_var = pca.explained_variance_ratio_
+        eigen = np.cumsum(exp_var)
+        plt.bar(range(0, len(exp_var)), exp_var, alpha=0.5, align='center',
+                label='Individual explained variance')
+        plt.step(range(0, len(eigen)), eigen, where='mid',
+                 label='Cumulative explained variance')
+        plt.ylabel('Explained variance ratio')
+        plt.xlabel('Principal component index')
+        plt.title(f"PCA on {data_set}")
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.savefig(f'images/{data_set}_PCA_EV.png')
+        plt.close()
+
+    def run_ica(self, x, data_set):
+        n_components = range(1, x.shape[1] + 1)
+        kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
+        for n in n_components:
+            ica = FastICA(n_components=n, random_state=self.random_seed)
+            k = pd.DataFrame(ica.fit_transform(x)).kurtosis().abs().mean()
+            kurtosis.loc[n, 'kurtosis'] = k
+        plt.plot(kurtosis, label="Average kurtosis")
+        plt.ylabel('Kurtosis')
+        plt.xlabel('n_components')
+        plt.title(f"Average kurtosis for n_components on {data_set}")
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.savefig(f'images/{data_set}_ICA_kurtosis.png')
+        plt.close()
+
+    def run_rca(self, x, data_set):
+        n_components = range(1, x.shape[1] + 1)
+        kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
+        for n in n_components:
+            ica = FastICA(n_components=n, random_state=self.random_seed)
+            k = pd.DataFrame(ica.fit_transform(x)).kurtosis().abs().mean()
+            kurtosis.loc[n, 'kurtosis'] = k
+        plt.plot(kurtosis, label="Average kurtosis")
+        plt.ylabel('Kurtosis')
+        plt.xlabel('n_components')
+        plt.title(f"Average kurtosis for n_components on {data_set}")
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.savefig(f'images/{data_set}_ICA_kurtosis.png')
+        plt.close()
+
+    def part2_experiment(self):
+        for data_set in self.datasets:
+            self.write_to_output(f"PART 2 RESULTS FOR {data_set} \n" + 100 * "_")
+
+            data = self.datasets[data_set]["x"]
+            labels = self.datasets[data_set]["y"]
+
+            scaler = StandardScaler()
+            scaled_data = scaler.fit_transform(data)
+
+            self.run_ica(scaled_data, data_set)
+            self.run_pca(scaled_data, data_set)
+
     def part1_experiment(self):
         for data_set in self.datasets:
             self.write_to_output(f"PART 1 RESULTS FOR {data_set} \n" + 100 * "_")
@@ -433,5 +496,6 @@ exp = experiments()
 np.random.seed(exp.random_seed)
 exp.prep_weather_data()
 exp.prep_heart_data()
-exp.part1_experiment()
+exp.part2_experiment()
+# exp.part1_experiment()
 # exp.neural_net_experiment()
