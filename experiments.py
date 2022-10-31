@@ -12,6 +12,7 @@ from sklearn.decomposition import PCA
 from sklearn.pipeline import make_pipeline
 from sklearn import metrics
 import seaborn as sns
+from yellowbrick.cluster import SilhouetteVisualizer
 
 class experiments:
     def __init__(self):
@@ -19,7 +20,7 @@ class experiments:
         self.output_file = 'output.txt'
         self.scoring = "accuracy"
         self.datasets = {"Heart Data": None, "Weather Data": None}
-        self.clusters = range(2, 11)
+        self.clusters = range(2, 6)
         self.train_sizes = np.linspace(0.01, 1.0, 20)
         self.cv = ShuffleSplit(n_splits=5, test_size=0.2, random_state=self.random_seed)
         self.nn_model = MLPClassifier(max_iter=1000, random_state=self.random_seed)
@@ -324,29 +325,13 @@ class experiments:
         return pd.DataFrame(data={'clusters': [n_clusters], 'fit_time': [fit_time], 'silhouette': silhouette})
 
     def plot_cluster_results(self, data_set, algo, results):
-        title = algo + ' Silhouette Scores for ' + data_set
+        title = 'Silhouette Scores for ' + data_set
         plt.title(title)
         plt.xlabel('Number of Clusters')
         plt.ylabel('Silhouette Scores')
-        plt.plot(results.clusters, results.silhouette, label='Silhouette Score')
+        plt.plot(results.clusters, results.silhouette, label=f'{algo} Silhouette Score')
         plt.grid()
         plt.legend(loc="best")
-
-        file_name = title.replace(" ", "")
-        plt.savefig(f"images/{file_name}.png")
-        plt.close()
-
-        title = algo + ' Fit Times for ' + data_set
-        plt.title(title)
-        plt.xlabel('Number of Clusters')
-        plt.ylabel('Fit Time (s)')
-        plt.plot(results.clusters, results.fit_time, label='Fit Time')
-        plt.grid()
-        plt.legend(loc="best")
-
-        file_name = title.replace(" ", "")
-        plt.savefig(f"images/{file_name}.png")
-        plt.close()
 
     def part1_experiment(self):
         for data_set in self.datasets:
@@ -367,7 +352,18 @@ class experiments:
             kmeans_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
 
             # Silhouette Visualization code was taken from this resource with some modification
-            # https://www.scikit-yb.org/en/latest/api/cluster/elbow.html
+            # https://dzone.com/articles/kmeans-silhouette-score-explained-with-python-exam
+            fig, ax = plt.subplots(2, 2, figsize=(15, 8))
+            plt.title(f'K-Means Silhouette Analysis for {data_set}')
+            for n_clusters in self.clusters:
+                q, mod = divmod(n_clusters, 2)
+                kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
+                visualizer = SilhouetteVisualizer(kmeans, colors='yellowbrick', ax=ax[q-1][mod])
+                visualizer.fit(scaled_data)
+
+            plt.savefig(f'images/{data_set}_KM_Silhouette_Analysis.png')
+            plt.close()
+
             for n_clusters in self.clusters:
                 kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
                 results = self.bench_cluster(algo=kmeans, name="k-means++", n_clusters=n_clusters, data=scaled_data)
@@ -379,6 +375,8 @@ class experiments:
 
             self.plot_cluster_results(data_set, 'K-Means', kmeans_results)
             self.plot_cluster_results(data_set, 'Expectation Maximization', em_results)
+            plt.savefig(f'images/{data_set}_Silhouette_Scores.png')
+            plt.close()
 
             best_kmeans_n = kmeans_results.query('silhouette == silhouette.max()').clusters[0]
             best_em_n = em_results.query('silhouette == silhouette.max()').clusters[0]
