@@ -366,6 +366,8 @@ class experiments:
             em_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
             kmeans_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
 
+            # Silhouette Visualization code was taken from this resource with some modification
+            # https://www.scikit-yb.org/en/latest/api/cluster/elbow.html
             for n_clusters in self.clusters:
                 kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
                 results = self.bench_cluster(algo=kmeans, name="k-means++", n_clusters=n_clusters, data=scaled_data)
@@ -378,29 +380,54 @@ class experiments:
             self.plot_cluster_results(data_set, 'K-Means', kmeans_results)
             self.plot_cluster_results(data_set, 'Expectation Maximization', em_results)
 
-            best_kmeans_n = kmeans_results.query('silhouette == silhouette.max()').clusters[0]
-            best_em_n = em_results.query('silhouette == silhouette.max()').clusters[0]
+            # best_kmeans_n = kmeans_results.query('silhouette == silhouette.max()').clusters[0]
+            # best_em_n = em_results.query('silhouette == silhouette.max()').clusters[0]
 
-            kmeans = KMeans(init="k-means++", n_clusters=best_kmeans_n, n_init=10, random_state=self.random_seed)
+            if data_set == 'Heart Data':
+                x_vars = ['AgeCategory', 'Sex', 'Smoking', 'BMI', 'PhysicalActivity']
+                y_vars = x_vars
+            else:
+                x_vars = ['Rainfall', 'Sunshine', 'RainToday', 'Temp3pm', 'Humidity3pm']
+                y_vars = x_vars
+
+            kmeans = KMeans(init="k-means++", n_clusters=2, n_init=10, random_state=self.random_seed)
             kmeans.fit(scaled_data)
             kmeans_pred = kmeans.predict(scaled_data)
             data_kmeans = data.copy()
             data_kmeans['cluster'] = kmeans_pred
-            sns.pairplot(data_kmeans, hue='cluster')
-            plt.savefig("images/kmeans_pairplot.png", dpi=300)
+            sns.pairplot(data_kmeans.sample(1000), hue='cluster', palette='bright', x_vars=x_vars, y_vars=y_vars)
+            plt.savefig(f"images/kmeans_pairplot_{data_set}.png", dpi=300)
+            plt.close()
 
-            self.write_to_output(pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=data).to_string())
+            kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=data.columns)
+            self.write_to_output(100 * "_")
+            self.write_to_output("K-Means Centers")
+            self.write_to_output(kmeans_centers.to_string(header=True, index=False))
 
-            em = GaussianMixture(n_components=best_em_n, random_state=self.random_seed)
+            kmeans_cm = pd.DataFrame(metrics.cluster.pair_confusion_matrix(labels, kmeans_pred))
+            self.write_to_output(100 * "_")
+            self.write_to_output("K-Means Confusion Matrix")
+            self.write_to_output(kmeans_cm.to_string(header=True, index=False))
+            self.write_to_output(100 * "_")
+
+            em = GaussianMixture(n_components=2, random_state=self.random_seed)
             em.fit(scaled_data)
             em_pred = em.predict(scaled_data)
             data_em = data.copy()
             data_em['cluster'] = em_pred
-            sns.pairplot(data_em, hue='cluster')
-            plt.savefig("images/em_pairplot.png", dpi=300)
+            sns.pairplot(data_em.sample(1000), hue='cluster', palette='bright', x_vars=x_vars, y_vars=y_vars)
+            plt.savefig(f"images/em_pairplot_{data_set}.png", dpi=300)
+            plt.close()
 
-            self.write_to_output(pd.DataFrame(scaler.inverse_transform(em.means_), columns=data).to_string())
+            em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=data.columns)
+            self.write_to_output(100 * "_")
+            self.write_to_output("EM Means")
+            self.write_to_output(em_means.to_string(header=True, index=False))
 
+            em_cm = pd.DataFrame(metrics.cluster.pair_confusion_matrix(labels, em_pred))
+            self.write_to_output(100 * "_")
+            self.write_to_output("EM Confusion Matrix")
+            self.write_to_output(em_cm.to_string(header=True, index=False))
             self.write_to_output(100 * "_")
 
 
