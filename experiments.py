@@ -371,8 +371,8 @@ class experiments:
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
         for n in n_components:
-            ica = FastICA(n_components=n, random_state=self.random_seed)
-            k = pd.DataFrame(ica.fit_transform(x)).kurtosis().abs().mean()
+            rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
+            k = pd.DataFrame(rca.fit_transform(x)).kurtosis().abs().mean()
             kurtosis.loc[n, 'kurtosis'] = k
         plt.plot(kurtosis, label="Average kurtosis")
         plt.ylabel('Kurtosis')
@@ -380,7 +380,7 @@ class experiments:
         plt.title(f"Average kurtosis for n_components on {data_set}")
         plt.legend(loc='best')
         plt.tight_layout()
-        plt.savefig(f'images/{data_set}_ICA_kurtosis.png')
+        plt.savefig(f'images/{data_set}_RCA_kurtosis.png')
         plt.close()
 
     def part2_experiment(self):
@@ -395,6 +395,7 @@ class experiments:
 
             self.run_ica(scaled_data, data_set)
             self.run_pca(scaled_data, data_set)
+            self.run_rca(scaled_data, data_set)
 
     def part1_experiment(self):
         for data_set in self.datasets:
