@@ -2,6 +2,11 @@ from time import perf_counter
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+from matplotlib import colors
+from scipy import linalg
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
 from sklearn.compose import make_column_transformer
@@ -10,6 +15,7 @@ from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 from sklearn.decomposition import PCA, FastICA
 from sklearn.random_projection import SparseRandomProjection
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.pipeline import make_pipeline
 from sklearn import metrics
 import seaborn as sns
@@ -339,6 +345,7 @@ class experiments:
         x_pca = pca.fit_transform(x)
         exp_var = pca.explained_variance_ratio_
         eigen = np.cumsum(exp_var)
+        plt.figure("PCA")
         plt.bar(range(0, len(exp_var)), exp_var, alpha=0.5, align='center',
                 label='Individual explained variance')
         plt.step(range(0, len(eigen)), eigen, where='mid',
@@ -352,35 +359,119 @@ class experiments:
         plt.close()
 
     def run_ica(self, x, data_set):
+        plt.figure("ICA")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
         for n in n_components:
             ica = FastICA(n_components=n, random_state=self.random_seed)
             k = pd.DataFrame(ica.fit_transform(x)).kurtosis().abs().mean()
             kurtosis.loc[n, 'kurtosis'] = k
-        plt.plot(kurtosis, label="Average kurtosis")
-        plt.ylabel('Kurtosis')
-        plt.xlabel('n_components')
-        plt.title(f"Average kurtosis for n_components on {data_set}")
-        plt.legend(loc='best')
-        plt.tight_layout()
-        plt.savefig(f'images/{data_set}_ICA_kurtosis.png')
-        plt.close()
+        plt.plot(kurtosis, label=f"{data_set} kurtosis")
 
     def run_rca(self, x, data_set):
+        plt.figure("RCA")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
         for n in n_components:
             rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
             k = pd.DataFrame(rca.fit_transform(x)).kurtosis().abs().mean()
             kurtosis.loc[n, 'kurtosis'] = k
-        plt.plot(kurtosis, label="Average kurtosis")
+        plt.plot(kurtosis, label=f"{data_set} Kurtosis")
+
+    def run_lda(self, x, y, data_set):
+        fig = f"LDA-{data_set}"
+        if data_set == 'Heart Data':
+            i1 = 1
+            i2 = 5
+        else:
+            i1 = 0
+            i2 = 1
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=0.2, random_state=self.random_seed
+        )
+        knn = KNeighborsClassifier(n_neighbors=3)
+        lda = LinearDiscriminantAnalysis(solver='svd', store_covariance=True)
+        lda.fit(x_train, y_train)
+        knn.fit(lda.transform(x_train), y_train)
+        acc_knn = knn.score(lda.transform(x_test), y_test)
+        y_pred = lda.fit(x, y).predict(x)
+
+        plt.figure(fig)
+        self.plot_lda(fig, lda, x, y, y_pred, i1, i2)
+        self.plot_ellipse(fig, lda.means_[0], lda.covariance_, "red", i1, i2)
+        self.plot_ellipse(fig, lda.means_[1], lda.covariance_, "blue", i1, i2)
+        plt.title("LDA, KNN (k={})\nTest accuracy = {:.2f}".format(3, acc_knn))
+        plt.savefig(f'images/{data_set}_LDA_KNN.png')
+        plt.close()
+
+    def plot_lda(self, fig, lda, X, y, y_pred, i1, i2):
+        plt.figure(fig)
+
+        tp = y == y_pred  # True Positive
+        tp0, tp1 = tp[y == 0], tp[y == 1]
+        X0, X1 = X[y == 0], X[y == 1]
+        X0_tp, X0_fp = X0[tp0], X0[~tp0]
+        X1_tp, X1_fp = X1[tp1], X1[~tp1]
+
+        # class 0: dots
+        plt.scatter(X0_tp[:, i1], X0_tp[:, i2], marker=".", color="red")
+        plt.scatter(X0_fp[:, i1], X0_fp[:, i2], marker="x", s=20, color="#990000")  # dark red
+
+        # class 1: dots
+        plt.scatter(X1_tp[:, i1], X1_tp[:, i2], marker=".", color="blue")
+        plt.scatter(
+            X1_fp[:, i1], X1_fp[:, i2], marker="x", s=20, color="#000099"
+        )  # dark blue
+
+        # means
+        plt.plot(
+            lda.means_[0][i1],
+            lda.means_[0][i2],
+            "*",
+            color="yellow",
+            markersize=15,
+            markeredgecolor="grey",
+        )
+        plt.plot(
+            lda.means_[1][i1],
+            lda.means_[1][i2],
+            "*",
+            color="yellow",
+            markersize=15,
+            markeredgecolor="grey",
+        )
+
+    def plot_ellipse(self, fig, mean, cov, color, i1, i2):
+        plt.figure(fig)
+        splot = plt.subplot()
+        v, w = linalg.eigh(cov)
+        u = w[i1] / linalg.norm(w[i1])
+        angle = np.arctan(u[i2] / u[i1])
+        angle = 180 * angle / np.pi  # convert to degrees
+        # filled Gaussian at 2 standard deviation
+        ell = mpl.patches.Ellipse(
+            mean,
+            2 * v[i1] ** 0.5,
+            2 * v[i2] ** 0.5,
+            180 + angle,
+            facecolor=color,
+            edgecolor="black",
+            linewidth=2,
+        )
+        ell.set_clip_box(splot.bbox)
+        ell.set_alpha(0.2)
+        splot.add_artist(ell)
+        splot.set_xticks(())
+        splot.set_yticks(())
+
+    def kurtosis_plot(self, algorithm, part):
+        plt.figure(algorithm)
         plt.ylabel('Kurtosis')
         plt.xlabel('n_components')
-        plt.title(f"Average kurtosis for n_components on {data_set}")
+        plt.title(f"Average kurtosis for n_components for {algorithm}")
         plt.legend(loc='best')
         plt.tight_layout()
-        plt.savefig(f'images/{data_set}_RCA_kurtosis.png')
+        plt.savefig(f'images/part{part}_{algorithm}_kurtosis.png')
         plt.close()
 
     def part2_experiment(self):
@@ -393,9 +484,13 @@ class experiments:
             scaler = StandardScaler()
             scaled_data = scaler.fit_transform(data)
 
-            self.run_ica(scaled_data, data_set)
             self.run_pca(scaled_data, data_set)
+            self.run_ica(scaled_data, data_set)
             self.run_rca(scaled_data, data_set)
+            self.run_lda(scaled_data, labels, data_set)
+
+        self.kurtosis_plot('ICA', '2')
+        self.kurtosis_plot('RCA', '2')
 
     def part1_experiment(self):
         for data_set in self.datasets:
