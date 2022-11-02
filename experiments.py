@@ -587,6 +587,7 @@ class experiments:
             reduced_data = {'pca': pca, 'ica': ica, 'rca': rca, 'lda': lda}
 
             for i, (algo_name, reduced) in enumerate(reduced_data.items()):
+                self.write_to_output(f"RESULTS FOR {algo_name}")
                 self.run_kmeans_sa(reduced, data_set, '3', algo_name)
                 best_kmeans_n, best_em_n = self.run_kmeans_em(reduced, data_set, '3', algo_name)
 
