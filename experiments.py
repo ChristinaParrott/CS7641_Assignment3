@@ -173,7 +173,7 @@ class experiments:
         axis.set_title("Model performance")
         axis.grid()
 
-    def generate_learning_curves(self, x_train, y_train, model, title):
+    def generate_learning_curves(self, x_train, y_train, model, title, part):
         fig, axes = plt.subplots(1, 3, figsize=(20, 5))
         axes[0].set_title(title)
         axes[0].set_xlabel("Number of training examples")
@@ -199,10 +199,10 @@ class experiments:
             self.plot_performance_train(axes[2], fit_times, cv_scores)
 
         file_name = title.replace(" ", "")
-        plt.savefig(f"images/{file_name}.png")
+        plt.savefig(f"images/part{part}/{file_name}.png")
         plt.close()
 
-    def plot_validation_curve(self, train_scores, cv_scores, title, param_name, param_range, xscale):
+    def plot_validation_curve(self, train_scores, cv_scores, title, param_name, param_range, xscale, part):
         mean_train_score = np.mean(train_scores, axis=1)
         std_train_score = np.std(train_scores, axis=1)
         mean_cv_score = np.mean(cv_scores, axis=1)
@@ -221,10 +221,10 @@ class experiments:
         plt.legend(loc="best")
 
         file_name = title.replace(" ", "") + "_" + param_name
-        plt.savefig(f"images/{file_name}.png")
+        plt.savefig(f"images/part{part}/{file_name}.png")
         plt.close()
 
-    def generate_validation_curves(self, x_train, y_train, model, hyperparams, title):
+    def generate_validation_curves(self, x_train, y_train, model, hyperparams, title, part):
         for param in hyperparams:
             param_range = hyperparams[param]
             train_scores, cv_scores = validation_curve(
@@ -242,9 +242,9 @@ class experiments:
                 param_range = ["(10)", "(20)", "(10, 10)", "(20, 20)", "(10, 10, 10)", "(20, 20, 20)"]
             if param == "alpha":
                 xscale = "log"
-            self.plot_validation_curve(train_scores, cv_scores, title, param, param_range, xscale)
+            self.plot_validation_curve(train_scores, cv_scores, title, param, param_range, xscale, part)
 
-    def generate_loss_curve(self, x_train, y_train, model, title):
+    def generate_loss_curve(self, x_train, y_train, model, title, part):
         model.fit(x_train, y_train)
         loss_curve = model.loss_curve_
         plt.plot(loss_curve, "o-", color="g", label="loss curve")
@@ -253,7 +253,7 @@ class experiments:
         plt.ylabel("Loss")
         plt.grid()
         file_name = title.replace(" ", "")
-        plt.savefig(f"images/{file_name}.png")
+        plt.savefig(f"images/part{part}/{file_name}.png")
         plt.close()
 
     def get_test_performance(self, x_train, y_train, x_test, y_test, model):
@@ -274,33 +274,29 @@ class experiments:
         self.write_to_output(f"Score time: {np.average(result.cv_results_['mean_score_time'])}")
         return result.best_estimator_
 
-    def neural_net_experiment(self):
-        for data_set in self.datasets:
-            self.write_to_output(f"NEURAL NETWORK FOR {data_set} \n ___________________________________________________")
-            vc_title = f"Neural Network Validation Curve for {data_set}"
-            lc_title = f"Neural Network Learning Curve for {data_set}"
-            loss_title = f"Neural Network Loss Curve for {data_set}"
+    def neural_net_experiment(self, data_set, x, y, part, algo_name):
+        self.write_to_output(f"NEURAL NETWORK FOR {data_set} WITH {algo_name} REDUCED DATA \n ___________________________________________________")
+        vc_title = f"Neural Network Validation Curve for {data_set} - {algo_name}"
+        lc_title = f"Neural Network Learning Curve for {data_set} - {algo_name}"
+        loss_title = f"Neural Network Loss Curve for {data_set} - {algo_name}"
 
-            x = self.datasets[data_set]["x"]
-            y = self.datasets[data_set]["y"]
+        x_train, x_test, y_train, y_test = train_test_split(
+            x,
+            y,
+            test_size=0.2,
+            random_state=self.random_seed
+        )
+        # MLP is sensitive to feature scaling, so it is recommended to scale the data (https://scikit-learn.org/stable/modules/neural_networks_supervised.html)
+        scaler = StandardScaler()
+        scaler.fit(x_train)
+        x_train = scaler.transform(x_train)
+        x_test = scaler.transform(x_test)
 
-            x_train, x_test, y_train, y_test = train_test_split(
-                x,
-                y,
-                test_size=0.2,
-                random_state=self.random_seed
-            )
-            # MLP is sensitive to feature scaling, so it is recommended to scale the data (https://scikit-learn.org/stable/modules/neural_networks_supervised.html)
-            scaler = StandardScaler()
-            scaler.fit(x_train)
-            x_train = scaler.transform(x_train)
-            x_test = scaler.transform(x_test)
-
-            self.generate_validation_curves(x_train, y_train, self.nn_model, self.nn_hyperparameters, vc_title)
-            self.tuned_nn = self.tune_hyperparams(x_train, y_train, self.nn_model, self.nn_hyperparameters, "Neural Network", data_set)
-            self.generate_learning_curves(x_train, y_train, self.tuned_nn, lc_title)
-            self.generate_loss_curve(x_train, y_train, self.tuned_nn, loss_title)
-            self.get_test_performance(x_train, y_train, x_test, y_test, self.tuned_nn)
+        self.generate_validation_curves(x_train, y_train, self.nn_model, self.nn_hyperparameters, vc_title, part)
+        self.tuned_nn = self.tune_hyperparams(x_train, y_train, self.nn_model, self.nn_hyperparameters, "Neural Network", data_set)
+        self.generate_learning_curves(x_train, y_train, self.tuned_nn, lc_title, part)
+        self.generate_loss_curve(x_train, y_train, self.tuned_nn, loss_title, part)
+        self.get_test_performance(x_train, y_train, x_test, y_test, self.tuned_nn, part)
 
     # this method is borrowed from the sklearn example here: https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_digits.html
     def bench_cluster(self, algo, name, n_clusters, data):
@@ -364,8 +360,8 @@ class experiments:
         self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
         return x_pca
 
-    def run_ica(self, x, y, data_set):
-        plt.figure("ICA")
+    def run_ica(self, x, y, data_set, part):
+        plt.figure(f"ICA{part}")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
         for n in n_components:
@@ -381,8 +377,8 @@ class experiments:
         self.bench_on_knn(ica, x_train, y_train, x_test, y_test)
         return ica.fit_transform(x)
 
-    def run_rca(self, x, y, data_set):
-        plt.figure("RCA")
+    def run_rca(self, x, y, data_set, part):
+        plt.figure(f"RCA{part}")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
         for n in n_components:
@@ -398,13 +394,13 @@ class experiments:
         self.bench_on_knn(rca, x_train, y_train, x_test, y_test)
         return rca.fit_transform(x)
 
-    def run_lda(self, x, y, data_set):
+    def run_lda(self, x, y, data_set, part):
         x_train, x_test, y_train, y_test = self.split_data(x, y)
         lda = LinearDiscriminantAnalysis(solver='svd', store_covariance=True)
         lda.fit(x_train, y_train)
         self.score_dim_red(lda, 'LDA', x_test, y_test, data_set)
         self.bench_on_knn(lda, x_train, y_train, x_test, y_test)
-        return lda.fit_transform(x)
+        return lda.fit_transform(x, y)
 
     def split_data(self, x, y):
         return train_test_split(
@@ -423,7 +419,7 @@ class experiments:
         self.write_to_output(f"knn accuracy {acc_knn}")
 
     def kurtosis_plot(self, algorithm, part):
-        plt.figure(algorithm)
+        plt.figure(algorithm+part)
         plt.ylabel('Kurtosis')
         plt.xlabel('n_components')
         plt.title(f"Average kurtosis for n_components for {algorithm}")
@@ -535,23 +531,6 @@ class experiments:
         self.write_to_output(100 * "_")
         return data, scaled_data, labels, scaler
 
-    def part2_experiment(self):
-        for data_set in self.datasets:
-            self.write_to_output(f"PART 2 RESULTS FOR {data_set} \n" + 100 * "_")
-
-            data = self.datasets[data_set]["x"]
-            labels = self.datasets[data_set]["y"]
-
-            scaler = StandardScaler()
-            scaled_data = scaler.fit_transform(data)
-
-            self.run_pca(scaled_data, labels, data_set, '2')
-            self.run_ica(scaled_data, labels, data_set)
-            self.run_rca(scaled_data, labels, data_set)
-            self.run_lda(scaled_data, labels, data_set)
-
-        self.kurtosis_plot('ICA', '2')
-        self.kurtosis_plot('RCA', '2')
 
     def part1_experiment(self):
         for data_set in self.datasets:
@@ -567,15 +546,37 @@ class experiments:
             self.bench_kmeans(scaler, kmeans, data.columns, labels, kmeans_pred)
             self.bench_em(scaler, em, data.columns, labels, em_pred)
 
+    def part2_experiment(self):
+        for data_set in self.datasets:
+            self.write_to_output(f"PART 2 RESULTS FOR {data_set} \n" + 100 * "_")
+
+            data = self.datasets[data_set]["x"]
+            labels = self.datasets[data_set]["y"]
+
+            scaler = StandardScaler()
+            scaled_data = scaler.fit_transform(data)
+
+            self.run_pca(scaled_data, labels, data_set, '2')
+            self.run_ica(scaled_data, labels, data_set, '2')
+            self.run_rca(scaled_data, labels, data_set, '2')
+            self.run_lda(scaled_data, labels, data_set, '2')
+
+        self.kurtosis_plot('ICA', '2')
+        self.kurtosis_plot('RCA', '2')
+
     def part3_experiment(self):
         for data_set in self.datasets:
             self.write_to_output(f"PART 3 RESULTS FOR {data_set} \n" + 100 * "_")
             data, scaled_data, labels, scaler = self.data_prep(data_set)
 
             pca = self.run_pca(scaled_data, labels, data_set, '3')
-            ica = self.run_ica(scaled_data, labels, data_set)
-            rca = self.run_rca(scaled_data, labels, data_set)
-            lda = self.run_lda(scaled_data, labels, data_set)
+            ica = self.run_ica(scaled_data, labels, data_set, '3')
+            rca = self.run_rca(scaled_data, labels, data_set, '3')
+            lda = self.run_lda(scaled_data, labels, data_set, '3')
+
+            self.kurtosis_plot('ICA', '3')
+            self.kurtosis_plot('RCA', '3')
+
             reduced_data = {'pca': pca, 'ica': ica, 'rca': rca, 'lda': lda}
 
             for i, (algo_name, reduced) in enumerate(reduced_data.items()):
@@ -588,14 +589,33 @@ class experiments:
                 self.bench_kmeans(scaler, kmeans, data.columns, labels, kmeans_pred)
                 self.bench_em(scaler, em, data.columns, labels, em_pred)
 
+    def part4_experiment(self):
+        data_set = 'Weather Data'
+        self.write_to_output(f"PART 4 RESULTS FOR {data_set} \n" + 100 * "_")
+        data, scaled_data, labels, scaler = self.data_prep(data_set)
 
+        pca = self.run_pca(scaled_data, labels, data_set, '4')
+        ica = self.run_ica(scaled_data, labels, data_set, '4')
+        rca = self.run_rca(scaled_data, labels, data_set, '4')
+        lda = self.run_lda(scaled_data, labels, data_set, '4')
 
+        self.kurtosis_plot('ICA', '4')
+        self.kurtosis_plot('RCA', '4')
+
+        reduced_data = {'pca': pca, 'ica': ica, 'rca': rca, 'lda': lda}
+
+        for i, (algo_name, reduced) in enumerate(reduced_data.items()):
+            self.write_to_output(f"{algo_name} \n" + 100 * "_")
+            self.neural_net_experiment(data_set, reduced, labels, algo_name, '4')
+
+        self.write_to_output(f"Original Data \n" + 100 * "_")
+        self.neural_net_experiment(data_set, scaled_data, labels, 'Original Data', '4')
 
 exp = experiments()
 np.random.seed(exp.random_seed)
 exp.prep_weather_data()
 exp.prep_heart_data()
-exp.part1_experiment()
+#exp.part1_experiment()
 exp.part2_experiment()
 exp.part3_experiment()
-# exp.neural_net_experiment()
+exp.part4_experiment()
