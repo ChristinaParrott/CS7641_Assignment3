@@ -431,8 +431,8 @@ class experiments:
     def run_kmeans_sa(self, scaled_data, data_set, part, algo=''):
         # Silhouette Visualization code was taken from this resource with some modification
         # https://dzone.com/articles/kmeans-silhouette-score-explained-with-python-exam
+        plt.figure(part+algo+data_set)
         fig, ax = plt.subplots(2, 2, figsize=(15, 8))
-        plt.title(f'K-Means Silhouette Analysis for {data_set}')
         for n_clusters in self.clusters:
             q, mod = divmod(n_clusters, 2)
             kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
@@ -443,6 +443,7 @@ class experiments:
         plt.close()
 
     def run_kmeans_em(self, scaled_data, data_set, part, algo=''):
+        plt.figure(part + algo + data_set)
         em_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
         kmeans_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
 
@@ -583,8 +584,8 @@ class experiments:
                 kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, reduced, data, data_set, '3', algo_name)
                 em, em_pred = self.run_em(best_em_n, reduced, data, data_set, '3', algo_name)
 
-                self.bench_kmeans(scaler, kmeans, reduced.columns, labels, kmeans_pred)
-                self.bench_em(scaler, em, reduced.columns, labels, em_pred)
+                self.bench_kmeans(scaler, kmeans, pd.DataFrame(reduced).columns, labels, kmeans_pred)
+                self.bench_em(scaler, em, pd.DataFrame(reduced).columns, labels, em_pred)
 
         self.kurtosis_plot('ICA', '3')
         self.kurtosis_plot('RCA', '3')
