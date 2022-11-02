@@ -2,10 +2,6 @@ from time import perf_counter
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-from matplotlib import colors
-from scipy import linalg
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
@@ -328,6 +324,7 @@ class experiments:
         formatter_result = (
             "{:9s}\t{:.0f}\t{:.3f}s\t{:.3f}"
         )
+        self.write_to_output('Silhouette analysis')
         self.write_to_output(formatter_result.format(*results))
         return pd.DataFrame(data={'clusters': [n_clusters], 'fit_time': [fit_time], 'silhouette': silhouette})
 
@@ -340,25 +337,34 @@ class experiments:
         plt.grid()
         plt.legend(loc="best")
 
-    def run_pca(self, x, data_set):
-        pca = PCA(random_state=self.random_seed)
-        x_pca = pca.fit_transform(x)
-        exp_var = pca.explained_variance_ratio_
+    def plot_ev(self, model, algo_name, data_set, part):
+        exp_var = model.explained_variance_ratio_
         eigen = np.cumsum(exp_var)
-        plt.figure("PCA")
+        plt.figure(algo_name)
         plt.bar(range(0, len(exp_var)), exp_var, alpha=0.5, align='center',
                 label='Individual explained variance')
         plt.step(range(0, len(eigen)), eigen, where='mid',
                  label='Cumulative explained variance')
         plt.ylabel('Explained variance ratio')
         plt.xlabel('Principal component index')
-        plt.title(f"PCA on {data_set}")
+        plt.title(f"{algo_name} on {data_set}")
         plt.legend(loc='best')
         plt.tight_layout()
-        plt.savefig(f'images/{data_set}_PCA_EV.png')
+        plt.savefig(f'images/part{part}/{data_set}_{algo_name}_EV.png')
         plt.close()
 
-    def run_ica(self, x, data_set):
+    def run_pca(self, x, y, data_set, part):
+        pca = PCA(random_state=self.random_seed)
+        x_pca = pca.fit_transform(x)
+        self.plot_ev(pca, 'PCA', data_set, part)
+
+        x_train, x_test, y_train, y_test = self.split_data(x, y)
+        pca.fit(x_train, y_train)
+        self.score_dim_red(pca, 'PCA', x_test, y_test, data_set)
+        self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
+        return x_pca
+
+    def run_ica(self, x, y, data_set):
         plt.figure("ICA")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
@@ -368,7 +374,14 @@ class experiments:
             kurtosis.loc[n, 'kurtosis'] = k
         plt.plot(kurtosis, label=f"{data_set} kurtosis")
 
-    def run_rca(self, x, data_set):
+        n = kurtosis['kurtosis'].astype('float').idxmax()
+        x_train, x_test, y_train, y_test = self.split_data(x, y)
+        ica = FastICA(n_components=n, random_state=self.random_seed)
+        ica.fit(x_train, y_train)
+        self.bench_on_knn(ica, x_train, y_train, x_test, y_test)
+        return ica.fit_transform(x)
+
+    def run_rca(self, x, y, data_set):
         plt.figure("RCA")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
@@ -378,91 +391,36 @@ class experiments:
             kurtosis.loc[n, 'kurtosis'] = k
         plt.plot(kurtosis, label=f"{data_set} Kurtosis")
 
+        n = kurtosis['kurtosis'].astype('float').idxmax()
+        x_train, x_test, y_train, y_test = self.split_data(x, y)
+        rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
+        rca.fit(x_train, y_train)
+        self.bench_on_knn(rca, x_train, y_train, x_test, y_test)
+        return rca.fit_transform(x)
+
     def run_lda(self, x, y, data_set):
-        fig = f"LDA-{data_set}"
-        if data_set == 'Heart Data':
-            i1 = 1
-            i2 = 5
-        else:
-            i1 = 0
-            i2 = 1
-        x_train, x_test, y_train, y_test = train_test_split(
-            x, y, test_size=0.2, random_state=self.random_seed
-        )
-        knn = KNeighborsClassifier(n_neighbors=3)
+        x_train, x_test, y_train, y_test = self.split_data(x, y)
         lda = LinearDiscriminantAnalysis(solver='svd', store_covariance=True)
         lda.fit(x_train, y_train)
-        knn.fit(lda.transform(x_train), y_train)
-        acc_knn = knn.score(lda.transform(x_test), y_test)
-        y_pred = lda.fit(x, y).predict(x)
+        self.score_dim_red(lda, 'LDA', x_test, y_test, data_set)
+        self.bench_on_knn(lda, x_train, y_train, x_test, y_test)
+        return lda.fit_transform(x)
 
-        plt.figure(fig)
-        self.plot_lda(fig, lda, x, y, y_pred, i1, i2)
-        self.plot_ellipse(fig, lda.means_[0], lda.covariance_, "red", i1, i2)
-        self.plot_ellipse(fig, lda.means_[1], lda.covariance_, "blue", i1, i2)
-        plt.title("LDA, KNN (k={})\nTest accuracy = {:.2f}".format(3, acc_knn))
-        plt.savefig(f'images/{data_set}_LDA_KNN.png')
-        plt.close()
-
-    def plot_lda(self, fig, lda, X, y, y_pred, i1, i2):
-        plt.figure(fig)
-
-        tp = y == y_pred  # True Positive
-        tp0, tp1 = tp[y == 0], tp[y == 1]
-        X0, X1 = X[y == 0], X[y == 1]
-        X0_tp, X0_fp = X0[tp0], X0[~tp0]
-        X1_tp, X1_fp = X1[tp1], X1[~tp1]
-
-        # class 0: dots
-        plt.scatter(X0_tp[:, i1], X0_tp[:, i2], marker=".", color="red")
-        plt.scatter(X0_fp[:, i1], X0_fp[:, i2], marker="x", s=20, color="#990000")  # dark red
-
-        # class 1: dots
-        plt.scatter(X1_tp[:, i1], X1_tp[:, i2], marker=".", color="blue")
-        plt.scatter(
-            X1_fp[:, i1], X1_fp[:, i2], marker="x", s=20, color="#000099"
-        )  # dark blue
-
-        # means
-        plt.plot(
-            lda.means_[0][i1],
-            lda.means_[0][i2],
-            "*",
-            color="yellow",
-            markersize=15,
-            markeredgecolor="grey",
-        )
-        plt.plot(
-            lda.means_[1][i1],
-            lda.means_[1][i2],
-            "*",
-            color="yellow",
-            markersize=15,
-            markeredgecolor="grey",
+    def split_data(self, x, y):
+        return train_test_split(
+            x, y, test_size=0.2, random_state=self.random_seed
         )
 
-    def plot_ellipse(self, fig, mean, cov, color, i1, i2):
-        plt.figure(fig)
-        splot = plt.subplot()
-        v, w = linalg.eigh(cov)
-        u = w[i1] / linalg.norm(w[i1])
-        angle = np.arctan(u[i2] / u[i1])
-        angle = 180 * angle / np.pi  # convert to degrees
-        # filled Gaussian at 2 standard deviation
-        ell = mpl.patches.Ellipse(
-            mean,
-            2 * v[i1] ** 0.5,
-            2 * v[i2] ** 0.5,
-            180 + angle,
-            facecolor=color,
-            edgecolor="black",
-            linewidth=2,
-        )
-        ell.set_clip_box(splot.bbox)
-        ell.set_alpha(0.2)
-        splot.add_artist(ell)
-        splot.set_xticks(())
-        splot.set_yticks(())
+    def score_dim_red(self, model, model_name, x_test, y_test, data_set):
+        acc = model.score(x_test, y_test)
+        self.write_to_output(f"{model_name} performance on {data_set} \n" + 100 * "_")
+        self.write_to_output(f"Accuracy {acc}")
+
+    def bench_on_knn(self, model, x_train, y_train, x_test, y_test):
+        knn = KNeighborsClassifier(n_neighbors=50)
+        knn.fit(model.transform(x_train), y_train)
+        acc_knn = knn.score(model.transform(x_test), y_test)
+        self.write_to_output(f"knn accuracy {acc_knn}")
 
     def kurtosis_plot(self, algorithm, part):
         plt.figure(algorithm)
@@ -471,8 +429,111 @@ class experiments:
         plt.title(f"Average kurtosis for n_components for {algorithm}")
         plt.legend(loc='best')
         plt.tight_layout()
-        plt.savefig(f'images/part{part}_{algorithm}_kurtosis.png')
+        plt.savefig(f'images/part{part}/{algorithm}_kurtosis.png')
         plt.close()
+
+    def run_kmeans_sa(self, scaled_data, data_set, part, algo=''):
+        # Silhouette Visualization code was taken from this resource with some modification
+        # https://dzone.com/articles/kmeans-silhouette-score-explained-with-python-exam
+        fig, ax = plt.subplots(2, 2, figsize=(15, 8))
+        plt.title(f'K-Means Silhouette Analysis for {data_set}')
+        for n_clusters in self.clusters:
+            q, mod = divmod(n_clusters, 2)
+            kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
+            visualizer = SilhouetteVisualizer(kmeans, colors='yellowbrick', ax=ax[q - 1][mod])
+            visualizer.fit(scaled_data)
+
+        plt.savefig(f'images/part{part}/{data_set}_KM_Silhouette_Analysis_{algo}.png')
+        plt.close()
+
+    def run_kmeans_em(self, scaled_data, data_set, part, algo=''):
+        em_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
+        kmeans_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
+
+        for n_clusters in self.clusters:
+            kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
+            results = self.bench_cluster(algo=kmeans, name="k-means++", n_clusters=n_clusters, data=scaled_data)
+            kmeans_results = pd.concat([kmeans_results, results])
+
+            em = GaussianMixture(n_components=n_clusters, random_state=self.random_seed)
+            results = self.bench_cluster(algo=em, name="em", n_clusters=n_clusters, data=scaled_data)
+            em_results = pd.concat([em_results, results])
+
+        self.plot_cluster_results(data_set, 'K-Means', kmeans_results)
+        self.plot_cluster_results(data_set, 'Expectation Maximization', em_results)
+
+        plt.savefig(f'images/part{part}/{data_set}_Silhouette_Scores_{algo}.png')
+        plt.close()
+
+        best_kmeans_n = kmeans_results.query('silhouette == silhouette.max()').clusters[0]
+        best_em_n = em_results.query('silhouette == silhouette.max()').clusters[0]
+        return best_kmeans_n, best_em_n
+
+    def generate_pair_plot(self, data, data_set, part, algo, algo2=''):
+        if data_set == 'Heart Data':
+            x_vars = ['AgeCategory', 'Sex', 'Smoking', 'BMI', 'PhysicalActivity']
+            y_vars = x_vars
+        else:
+            x_vars = ['Rainfall', 'Sunshine', 'RainToday', 'Temp3pm', 'Humidity3pm']
+            y_vars = x_vars
+
+        sns.pairplot(data.sample(1000), hue='cluster', palette='bright', x_vars=x_vars, y_vars=y_vars)
+        plt.savefig(f"images/part{part}/pairplot_{data_set}_{algo}_{algo2}.png", dpi=300)
+        plt.close()
+
+    def run_kmeans(self, n, scaled_data, data, data_set, part, algo=''):
+        kmeans = KMeans(init="k-means++", n_clusters=n, n_init=10, random_state=self.random_seed)
+        kmeans.fit(scaled_data)
+        kmeans_pred = kmeans.predict(scaled_data)
+        data_kmeans = data.copy()
+        data_kmeans['cluster'] = kmeans_pred
+        self.generate_pair_plot(data_kmeans, data_set, part, 'kmeans', algo)
+        return kmeans, kmeans_pred
+
+    def run_em(self, n, scaled_data, data, data_set, part, algo=''):
+        em = GaussianMixture(n_components=n, random_state=self.random_seed)
+        em.fit(scaled_data)
+        em_pred = em.predict(scaled_data)
+        data_em = data.copy()
+        data_em['cluster'] = em_pred
+        self.generate_pair_plot(data_em, data_set, part, 'em', algo)
+        return em, em_pred
+
+    def bench_kmeans(self, scaler, kmeans, columns, labels, kmeans_pred):
+        kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=columns)
+        self.write_to_output(100 * "_")
+        self.write_to_output("K-Means Centers")
+        self.write_to_output(kmeans_centers.to_string(header=True, index=False))
+
+        kmeans_cm = metrics.multilabel_confusion_matrix(labels, kmeans_pred)
+        self.write_to_output(100 * "_")
+        self.write_to_output("K-Means Confusion Matrix")
+        self.write_to_output(np.array2string(kmeans_cm))
+        self.write_to_output(100 * "_")
+
+    def bench_em(self, scaler, em, columns, labels, em_pred):
+        em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=columns)
+        self.write_to_output(100 * "_")
+        self.write_to_output("EM Means")
+        self.write_to_output(em_means.to_string(header=True, index=False))
+
+        em_cm = metrics.multilabel_confusion_matrix(labels, em_pred)
+        self.write_to_output(100 * "_")
+        self.write_to_output("EM Confusion Matrix")
+        self.write_to_output(np.array2string(em_cm))
+        self.write_to_output(100 * "_")
+
+    def data_prep(self, data_set):
+        data = self.datasets[data_set]["x"]
+        labels = self.datasets[data_set]["y"]
+
+        scaler = StandardScaler()
+        scaled_data = scaler.fit_transform(data)
+
+        (n_samples, n_features), n_labels = data.shape, np.unique(labels).size
+        self.write_to_output(f"# labels: {n_labels}; # samples: {n_samples}; # features {n_features}")
+        self.write_to_output(100 * "_")
+        return data, scaled_data, labels, scaler
 
     def part2_experiment(self):
         for data_set in self.datasets:
@@ -484,9 +545,9 @@ class experiments:
             scaler = StandardScaler()
             scaled_data = scaler.fit_transform(data)
 
-            self.run_pca(scaled_data, data_set)
-            self.run_ica(scaled_data, data_set)
-            self.run_rca(scaled_data, data_set)
+            self.run_pca(scaled_data, labels, data_set, '2')
+            self.run_ica(scaled_data, labels, data_set)
+            self.run_rca(scaled_data, labels, data_set)
             self.run_lda(scaled_data, labels, data_set)
 
         self.kurtosis_plot('ICA', '2')
@@ -495,103 +556,46 @@ class experiments:
     def part1_experiment(self):
         for data_set in self.datasets:
             self.write_to_output(f"PART 1 RESULTS FOR {data_set} \n" + 100 * "_")
+            data, scaled_data, labels, scaler = self.data_prep(data_set)
 
-            data = self.datasets[data_set]["x"]
-            labels = self.datasets[data_set]["y"]
+            self.run_kmeans_sa(scaled_data, data_set, '1')
+            best_kmeans_n, best_em_n = self.run_kmeans_em(scaled_data, data_set, '1')
 
-            scaler = StandardScaler()
-            scaled_data = scaler.fit_transform(data)
+            kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, scaled_data, data, data_set, '1')
+            em, em_pred = self.run_em(best_em_n, scaled_data, data, data_set, '1')
 
-            (n_samples, n_features), n_labels = data.shape, np.unique(labels).size
-            self.write_to_output(f"# labels: {n_labels}; # samples: {n_samples}; # features {n_features}")
-            self.write_to_output(100 * "_")
-            self.write_to_output("name\t\tclusters\ttime\tsilhouette")
+            self.bench_kmeans(scaler, kmeans, data.columns, labels, kmeans_pred)
+            self.bench_em(scaler, em, data.columns, labels, em_pred)
 
-            em_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
-            kmeans_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
+    def part3_experiment(self):
+        for data_set in self.datasets:
+            self.write_to_output(f"PART 3 RESULTS FOR {data_set} \n" + 100 * "_")
+            data, scaled_data, labels, scaler = self.data_prep(data_set)
 
-            # Silhouette Visualization code was taken from this resource with some modification
-            # https://dzone.com/articles/kmeans-silhouette-score-explained-with-python-exam
-            fig, ax = plt.subplots(2, 2, figsize=(15, 8))
-            plt.title(f'K-Means Silhouette Analysis for {data_set}')
-            for n_clusters in self.clusters:
-                q, mod = divmod(n_clusters, 2)
-                kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
-                visualizer = SilhouetteVisualizer(kmeans, colors='yellowbrick', ax=ax[q-1][mod])
-                visualizer.fit(scaled_data)
+            pca = self.run_pca(scaled_data, labels, data_set, '3')
+            ica = self.run_ica(scaled_data, labels, data_set)
+            rca = self.run_rca(scaled_data, labels, data_set)
+            lda = self.run_lda(scaled_data, labels, data_set)
+            reduced_data = {'pca': pca, 'ica': ica, 'rca': rca, 'lda': lda}
 
-            plt.savefig(f'images/{data_set}_KM_Silhouette_Analysis.png')
-            plt.close()
+            for i, (algo_name, reduced) in enumerate(reduced_data.items()):
+                self.run_kmeans_sa(reduced, data_set, '3', algo_name)
+                best_kmeans_n, best_em_n = self.run_kmeans_em(reduced, data_set, '3', algo_name)
 
-            for n_clusters in self.clusters:
-                kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
-                results = self.bench_cluster(algo=kmeans, name="k-means++", n_clusters=n_clusters, data=scaled_data)
-                kmeans_results = pd.concat([kmeans_results, results])
+                kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, reduced, data, data_set, '3', algo_name)
+                em, em_pred = self.run_em(best_em_n, reduced, data, data_set, '3', algo_name)
 
-                em = GaussianMixture(n_components=n_clusters, random_state=self.random_seed)
-                results = self.bench_cluster(algo=em, name="em", n_clusters=n_clusters, data=scaled_data)
-                em_results = pd.concat([em_results, results])
+                self.bench_kmeans(scaler, kmeans, data.columns, labels, kmeans_pred)
+                self.bench_em(scaler, em, data.columns, labels, em_pred)
 
-            self.plot_cluster_results(data_set, 'K-Means', kmeans_results)
-            self.plot_cluster_results(data_set, 'Expectation Maximization', em_results)
-            plt.savefig(f'images/{data_set}_Silhouette_Scores.png')
-            plt.close()
 
-            best_kmeans_n = kmeans_results.query('silhouette == silhouette.max()').clusters[0]
-            best_em_n = em_results.query('silhouette == silhouette.max()').clusters[0]
-
-            if data_set == 'Heart Data':
-                x_vars = ['AgeCategory', 'Sex', 'Smoking', 'BMI', 'PhysicalActivity']
-                y_vars = x_vars
-            else:
-                x_vars = ['Rainfall', 'Sunshine', 'RainToday', 'Temp3pm', 'Humidity3pm']
-                y_vars = x_vars
-
-            kmeans = KMeans(init="k-means++", n_clusters=best_kmeans_n, n_init=10, random_state=self.random_seed)
-            kmeans.fit(scaled_data)
-            kmeans_pred = kmeans.predict(scaled_data)
-            data_kmeans = data.copy()
-            data_kmeans['cluster'] = kmeans_pred
-            sns.pairplot(data_kmeans.sample(1000), hue='cluster', palette='bright', x_vars=x_vars, y_vars=y_vars)
-            plt.savefig(f"images/kmeans_pairplot_{data_set}.png", dpi=300)
-            plt.close()
-
-            kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=data.columns)
-            self.write_to_output(100 * "_")
-            self.write_to_output("K-Means Centers")
-            self.write_to_output(kmeans_centers.to_string(header=True, index=False))
-            kmeans_cm = pd.DataFrame(metrics.cluster.contingency_matrix(labels, kmeans_pred))
-
-            self.write_to_output(100 * "_")
-            self.write_to_output("K-Means Contingency Matrix")
-            self.write_to_output(kmeans_cm.to_string(header=True, index=False))
-            self.write_to_output(100 * "_")
-
-            em = GaussianMixture(n_components=best_em_n, random_state=self.random_seed)
-            em.fit(scaled_data)
-            em_pred = em.predict(scaled_data)
-            data_em = data.copy()
-            data_em['cluster'] = em_pred
-            sns.pairplot(data_em.sample(1000), hue='cluster', palette='bright', x_vars=x_vars, y_vars=y_vars)
-            plt.savefig(f"images/em_pairplot_{data_set}.png", dpi=300)
-            plt.close()
-
-            em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=data.columns)
-            self.write_to_output(100 * "_")
-            self.write_to_output("EM Means")
-            self.write_to_output(em_means.to_string(header=True, index=False))
-
-            em_cm = pd.DataFrame(metrics.cluster.contingency_matrix(labels, em_pred))
-            self.write_to_output(100 * "_")
-            self.write_to_output("EM Contingency Matrix")
-            self.write_to_output(em_cm.to_string(header=True, index=False))
-            self.write_to_output(100 * "_")
 
 
 exp = experiments()
 np.random.seed(exp.random_seed)
 exp.prep_weather_data()
 exp.prep_heart_data()
+exp.part1_experiment()
 exp.part2_experiment()
-# exp.part1_experiment()
+exp.part3_experiment()
 # exp.neural_net_experiment()
