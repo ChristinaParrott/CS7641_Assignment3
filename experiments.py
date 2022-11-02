@@ -497,7 +497,10 @@ class experiments:
         return em, em_pred
 
     def bench_kmeans(self, scaler, kmeans, columns, labels, kmeans_pred):
-        kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=columns)
+        if columns == None:
+            kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_))
+        else:
+            kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=columns)
         self.write_to_output(100 * "_")
         self.write_to_output("K-Means Centers")
         self.write_to_output(kmeans_centers.to_string(header=True, index=False))
@@ -509,7 +512,10 @@ class experiments:
         self.write_to_output(100 * "_")
 
     def bench_em(self, scaler, em, columns, labels, em_pred):
-        em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=columns)
+        if columns == None:
+            em_means = pd.DataFrame(scaler.inverse_transform(em.means_))
+        else:
+            em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=columns)
         self.write_to_output(100 * "_")
         self.write_to_output("EM Means")
         self.write_to_output(em_means.to_string(header=True, index=False))
@@ -584,8 +590,8 @@ class experiments:
                 kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, reduced, data, data_set, '3', algo_name)
                 em, em_pred = self.run_em(best_em_n, reduced, data, data_set, '3', algo_name)
 
-                self.bench_kmeans(scaler, kmeans, pd.DataFrame(reduced).columns, labels, kmeans_pred)
-                self.bench_em(scaler, em, pd.DataFrame(reduced).columns, labels, em_pred)
+                self.bench_kmeans(scaler, kmeans, None, labels, kmeans_pred)
+                self.bench_em(scaler, em, None, labels, em_pred)
 
         self.kurtosis_plot('ICA', '3')
         self.kurtosis_plot('RCA', '3')

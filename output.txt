@@ -320,3 +320,19 @@ EM Confusion Matrix
  [[20045 34701]
   [    0     0]]]
 ____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.102s	0.239
+Silhouette analysis
+em       	2	0.155s	0.240
+Silhouette analysis
+k-means++	3	0.163s	0.232
+Silhouette analysis
+em       	3	0.243s	0.094
+Silhouette analysis
+k-means++	4	0.199s	0.107
+Silhouette analysis
+em       	4	0.387s	0.064
+Silhouette analysis
+k-means++	5	0.277s	0.088
+Silhouette analysis
+em       	5	0.814s	0.071
