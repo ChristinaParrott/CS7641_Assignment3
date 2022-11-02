@@ -548,7 +548,7 @@ class experiments:
 
     def part2_experiment(self):
         for data_set in self.datasets:
-            self.write_to_output(f"PART 2 RESULTS FOR {data_set} \n" + 100 * "_")
+            self.write_to_output(f"\nPART 2 RESULTS FOR {data_set} \n" + 100 * "_")
 
             data = self.datasets[data_set]["x"]
             labels = self.datasets[data_set]["y"]
@@ -566,16 +566,13 @@ class experiments:
 
     def part3_experiment(self):
         for data_set in self.datasets:
-            self.write_to_output(f"PART 3 RESULTS FOR {data_set} \n" + 100 * "_")
+            self.write_to_output(f"\nPART 3 RESULTS FOR {data_set} \n" + 100 * "_")
             data, scaled_data, labels, scaler = self.data_prep(data_set)
 
             pca = self.run_pca(scaled_data, labels, data_set, '3')
             ica = self.run_ica(scaled_data, labels, data_set, '3')
             rca = self.run_rca(scaled_data, labels, data_set, '3')
             lda = self.run_lda(scaled_data, labels, data_set, '3')
-
-            self.kurtosis_plot('ICA', '3')
-            self.kurtosis_plot('RCA', '3')
 
             reduced_data = {'pca': pca, 'ica': ica, 'rca': rca, 'lda': lda}
 
@@ -586,8 +583,11 @@ class experiments:
                 kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, reduced, data, data_set, '3', algo_name)
                 em, em_pred = self.run_em(best_em_n, reduced, data, data_set, '3', algo_name)
 
-                self.bench_kmeans(scaler, kmeans, data.columns, labels, kmeans_pred)
-                self.bench_em(scaler, em, data.columns, labels, em_pred)
+                self.bench_kmeans(scaler, kmeans, reduced.columns, labels, kmeans_pred)
+                self.bench_em(scaler, em, reduced.columns, labels, em_pred)
+
+        self.kurtosis_plot('ICA', '3')
+        self.kurtosis_plot('RCA', '3')
 
     def part4_experiment(self):
         data_set = 'Weather Data'
@@ -615,7 +615,7 @@ exp = experiments()
 np.random.seed(exp.random_seed)
 exp.prep_weather_data()
 exp.prep_heart_data()
-#exp.part1_experiment()
-exp.part2_experiment()
+# exp.part1_experiment()
+# exp.part2_experiment()
 exp.part3_experiment()
 exp.part4_experiment()
