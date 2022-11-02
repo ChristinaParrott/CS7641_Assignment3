@@ -356,7 +356,8 @@ class experiments:
 
         x_train, x_test, y_train, y_test = self.split_data(x, y)
         pca.fit(x_train, y_train)
-        self.score_dim_red(pca, 'PCA', x_test, y_test, data_set)
+        self.write_to_output(f"RCA performance on {data_set} \n" + 100 * "_")
+        self.score_dim_red(pca, x_test, y_test)
         self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
         return x_pca
 
@@ -374,6 +375,7 @@ class experiments:
         x_train, x_test, y_train, y_test = self.split_data(x, y)
         ica = FastICA(n_components=n, random_state=self.random_seed)
         ica.fit(x_train, y_train)
+        self.write_to_output(f"ICA performance on {data_set} \n" + 100 * "_")
         self.bench_on_knn(ica, x_train, y_train, x_test, y_test)
         return ica.fit_transform(x)
 
@@ -391,6 +393,7 @@ class experiments:
         x_train, x_test, y_train, y_test = self.split_data(x, y)
         rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
         rca.fit(x_train, y_train)
+        self.write_to_output(f"RCA performance on {data_set} \n" + 100 * "_")
         self.bench_on_knn(rca, x_train, y_train, x_test, y_test)
         return rca.fit_transform(x)
 
@@ -398,7 +401,8 @@ class experiments:
         x_train, x_test, y_train, y_test = self.split_data(x, y)
         lda = LinearDiscriminantAnalysis(solver='svd', store_covariance=True)
         lda.fit(x_train, y_train)
-        self.score_dim_red(lda, 'LDA', x_test, y_test, data_set)
+        self.write_to_output(f"LDA performance on {data_set} \n" + 100 * "_")
+        self.score_dim_red(lda, x_test, y_test)
         self.bench_on_knn(lda, x_train, y_train, x_test, y_test)
         return lda.fit_transform(x, y)
 
@@ -407,9 +411,8 @@ class experiments:
             x, y, test_size=0.2, random_state=self.random_seed
         )
 
-    def score_dim_red(self, model, model_name, x_test, y_test, data_set):
+    def score_dim_red(self, model, x_test, y_test):
         acc = model.score(x_test, y_test)
-        self.write_to_output(f"{model_name} performance on {data_set} \n" + 100 * "_")
         self.write_to_output(f"Accuracy {acc}")
 
     def bench_on_knn(self, model, x_train, y_train, x_test, y_test):
