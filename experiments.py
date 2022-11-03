@@ -274,32 +274,20 @@ class experiments:
         self.write_to_output(f"Score time: {np.average(result.cv_results_['mean_score_time'])}")
         return result.best_estimator_
 
-    def neural_net_experiment(self, data_set, x, y, part, algo_name):
+    def neural_net_experiment(self, data_set, x_train, y_train, x_test, y_test, part, algo_name=None):
         self.write_to_output(f"NEURAL NETWORK FOR {data_set} WITH {algo_name} REDUCED DATA \n ___________________________________________________")
         vc_title = f"Neural Network Validation Curve for {data_set} - {algo_name}"
         lc_title = f"Neural Network Learning Curve for {data_set} - {algo_name}"
         loss_title = f"Neural Network Loss Curve for {data_set} - {algo_name}"
 
-        x_train, x_test, y_train, y_test = train_test_split(
-            x,
-            y,
-            test_size=0.2,
-            random_state=self.random_seed
-        )
-        # MLP is sensitive to feature scaling, so it is recommended to scale the data (https://scikit-learn.org/stable/modules/neural_networks_supervised.html)
-        scaler = StandardScaler()
-        scaler.fit(x_train)
-        x_train = scaler.transform(x_train)
-        x_test = scaler.transform(x_test)
-
         self.generate_validation_curves(x_train, y_train, self.nn_model, self.nn_hyperparameters, vc_title, part)
         self.tuned_nn = self.tune_hyperparams(x_train, y_train, self.nn_model, self.nn_hyperparameters, "Neural Network", data_set)
         self.generate_learning_curves(x_train, y_train, self.tuned_nn, lc_title, part)
         self.generate_loss_curve(x_train, y_train, self.tuned_nn, loss_title, part)
-        self.get_test_performance(x_train, y_train, x_test, y_test, self.tuned_nn, part)
+        self.get_test_performance(x_train, y_train, x_test, y_test, self.tuned_nn)
 
     # this method is borrowed from the sklearn example here: https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_digits.html
-    def bench_cluster(self, algo, name, n_clusters, data):
+    def bench_cluster(self, algo, name, n_clusters, data, gen_results=True):
         t0 = perf_counter()
         estimator = make_pipeline(StandardScaler(), algo).fit(data)
         fit_time = perf_counter() - t0
@@ -316,12 +304,13 @@ class experiments:
         ]
         results += silhouette
 
-        # Show the results
-        formatter_result = (
-            "{:9s}\t{:.0f}\t{:.3f}s\t{:.3f}"
-        )
-        self.write_to_output('Silhouette analysis')
-        self.write_to_output(formatter_result.format(*results))
+        if gen_results:
+            # Show the results
+            formatter_result = (
+                "{:9s}\t{:.0f}\t{:.3f}s\t{:.3f}"
+            )
+            self.write_to_output('Silhouette analysis')
+            self.write_to_output(formatter_result.format(*results))
         return pd.DataFrame(data={'clusters': [n_clusters], 'fit_time': [fit_time], 'silhouette': silhouette})
 
     def plot_cluster_results(self, data_set, algo, results):
@@ -349,19 +338,33 @@ class experiments:
         plt.savefig(f'images/part{part}/{data_set}_{algo_name}_EV.png')
         plt.close()
 
-    def run_pca(self, x, y, data_set, part):
-        pca = PCA(random_state=self.random_seed)
+    def run_pca(self, x, y, data_set, part, gen_results=True):
+        if gen_results:
+            pca = PCA(random_state=self.random_seed)
+            pca.fit_transform(x)
+            self.plot_ev(pca, 'PCA', data_set, part)
+
+            x_train, x_test, y_train, y_test = self.split_data(x, y)
+            pca.fit(x_train, y_train)
+            self.write_to_output(f"PCA performance on {data_set} \n" + 100 * "_")
+            self.score_dim_red(pca, x_test, y_test)
+            self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
+
+        if data_set == 'Weather Data':
+            n = 8
+        else:
+            n = 14
+        pca = PCA(random_state=self.random_seed, n_components=n)
         x_pca = pca.fit_transform(x)
-        self.plot_ev(pca, 'PCA', data_set, part)
+        if gen_results:
+            x_train, x_test, y_train, y_test = self.split_data(x, y)
+            pca.fit(x_train, y_train)
+            self.write_to_output(f"PCA performance on {data_set} - {n} components \n" + 100 * "_")
+            self.score_dim_red(pca, x_test, y_test)
+            self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
+        return x_pca, pca
 
-        x_train, x_test, y_train, y_test = self.split_data(x, y)
-        pca.fit(x_train, y_train)
-        self.write_to_output(f"RCA performance on {data_set} \n" + 100 * "_")
-        self.score_dim_red(pca, x_test, y_test)
-        self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
-        return x_pca
-
-    def run_ica(self, x, y, data_set, part):
+    def run_ica(self, x, y, data_set, part, gen_results=True):
         plt.figure(f"ICA{part}")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
@@ -369,17 +372,19 @@ class experiments:
             ica = FastICA(n_components=n, random_state=self.random_seed)
             k = pd.DataFrame(ica.fit_transform(x)).kurtosis().abs().mean()
             kurtosis.loc[n, 'kurtosis'] = k
-        plt.plot(kurtosis, label=f"{data_set} kurtosis")
+        if gen_results:
+            plt.plot(kurtosis, label=f"{data_set} kurtosis")
 
         n = kurtosis['kurtosis'].astype('float').idxmax()
-        x_train, x_test, y_train, y_test = self.split_data(x, y)
         ica = FastICA(n_components=n, random_state=self.random_seed)
-        ica.fit(x_train, y_train)
-        self.write_to_output(f"ICA performance on {data_set} \n" + 100 * "_")
-        self.bench_on_knn(ica, x_train, y_train, x_test, y_test)
-        return ica.fit_transform(x)
+        if gen_results:
+            x_train, x_test, y_train, y_test = self.split_data(x, y)
+            ica.fit(x_train, y_train)
+            self.write_to_output(f"ICA performance on {data_set} \n" + 100 * "_")
+            self.bench_on_knn(ica, x_train, y_train, x_test, y_test)
+        return ica.fit_transform(x), ica
 
-    def run_rca(self, x, y, data_set, part):
+    def run_rca(self, x, y, data_set, part, gen_results=True):
         plt.figure(f"RCA{part}")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
@@ -387,24 +392,27 @@ class experiments:
             rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
             k = pd.DataFrame(rca.fit_transform(x)).kurtosis().abs().mean()
             kurtosis.loc[n, 'kurtosis'] = k
-        plt.plot(kurtosis, label=f"{data_set} Kurtosis")
+        if gen_results:
+            plt.plot(kurtosis, label=f"{data_set} Kurtosis")
 
         n = kurtosis['kurtosis'].astype('float').idxmax()
-        x_train, x_test, y_train, y_test = self.split_data(x, y)
         rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
-        rca.fit(x_train, y_train)
-        self.write_to_output(f"RCA performance on {data_set} \n" + 100 * "_")
-        self.bench_on_knn(rca, x_train, y_train, x_test, y_test)
-        return rca.fit_transform(x)
+        if gen_results:
+            x_train, x_test, y_train, y_test = self.split_data(x, y)
+            rca.fit(x_train, y_train)
+            self.write_to_output(f"RCA performance on {data_set} \n" + 100 * "_")
+            self.bench_on_knn(rca, x_train, y_train, x_test, y_test)
+        return rca.fit_transform(x), rca
 
-    def run_lda(self, x, y, data_set, part):
-        x_train, x_test, y_train, y_test = self.split_data(x, y)
+    def run_lda(self, x, y, data_set, part, gen_results=True):
         lda = LinearDiscriminantAnalysis(solver='svd', store_covariance=True)
-        lda.fit(x_train, y_train)
-        self.write_to_output(f"LDA performance on {data_set} \n" + 100 * "_")
-        self.score_dim_red(lda, x_test, y_test)
-        self.bench_on_knn(lda, x_train, y_train, x_test, y_test)
-        return lda.fit_transform(x, y)
+        if gen_results:
+            x_train, x_test, y_train, y_test = self.split_data(x, y)
+            lda.fit(x_train, y_train)
+            self.write_to_output(f"LDA performance on {data_set} \n" + 100 * "_")
+            self.score_dim_red(lda, x_test, y_test)
+            self.bench_on_knn(lda, x_train, y_train, x_test, y_test)
+        return lda.fit_transform(x, y), lda
 
     def split_data(self, x, y):
         return train_test_split(
@@ -431,6 +439,58 @@ class experiments:
         plt.savefig(f'images/part{part}/{algorithm}_kurtosis.png')
         plt.close()
 
+    def plot_samples(self, S, axis_list=None):
+        plt.scatter(
+            S[:, 0], S[:, 1], s=2, marker="o", zorder=10, color="steelblue", alpha=0.5
+        )
+        if axis_list is not None:
+            for axis, color, label in axis_list:
+                axis /= axis.std()
+                x_axis, y_axis = axis
+                plt.quiver(
+                    (0, 0),
+                    (0, 0),
+                    x_axis,
+                    y_axis,
+                    zorder=11,
+                    width=0.01,
+                    scale=6,
+                    color=color,
+                    label=label,
+                )
+
+        plt.hlines(0, -3, 3)
+        plt.vlines(0, -3, 3)
+        plt.xlim(-3, 3)
+        plt.ylim(-3, 3)
+        plt.xlabel("x")
+        plt.ylabel("y")
+
+    def generation_projections(self, data, pca, ica, data_set, part):
+        S_pca_ = pca.fit(data).transform(data)
+        S_ica_ = ica.fit(data).transform(data)
+        S_ica_ /= S_ica_.std(axis=0)
+        plt.figure(part+data_set)
+
+        axis_list = [(pca.components_.T, "orange", "PCA"), (ica.mixing_, "red", "ICA")]
+        plt.subplot(2, 2, 1)
+        self.plot_samples(data / np.std(data), axis_list=axis_list)
+        legend = plt.legend(loc="lower right")
+        legend.set_zorder(100)
+        plt.title("Observations")
+
+        plt.subplot(2, 2, 2)
+        self.plot_samples(S_pca_ / np.std(S_pca_, axis=0))
+        plt.title("PCA recovered signals")
+
+        plt.subplot(2, 2, 3)
+        self.plot_samples(S_ica_ / np.std(S_ica_))
+        plt.title("ICA recovered signals")
+
+        plt.subplots_adjust(0.09, 0.04, 0.94, 0.94, 0.26, 0.36)
+        plt.savefig(f'images/part{part}/{data_set}_pca_ica_projections.png')
+        plt.close()
+
     def run_kmeans_sa(self, scaled_data, data_set, part, algo=''):
         # Silhouette Visualization code was taken from this resource with some modification
         # https://dzone.com/articles/kmeans-silhouette-score-explained-with-python-exam
@@ -445,25 +505,26 @@ class experiments:
         plt.savefig(f'images/part{part}/{data_set}_KM_Silhouette_Analysis_{algo}.png')
         plt.close()
 
-    def run_kmeans_em(self, scaled_data, data_set, part, algo=''):
+    def run_kmeans_em(self, scaled_data, data_set, part, algo='', gen_results=True):
         plt.figure(part + algo + data_set)
         em_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
         kmeans_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
 
         for n_clusters in self.clusters:
             kmeans = KMeans(init="k-means++", n_clusters=n_clusters, n_init=10, random_state=self.random_seed)
-            results = self.bench_cluster(algo=kmeans, name="k-means++", n_clusters=n_clusters, data=scaled_data)
+            results = self.bench_cluster(kmeans, "k-means++", n_clusters, scaled_data, gen_results)
             kmeans_results = pd.concat([kmeans_results, results])
 
             em = GaussianMixture(n_components=n_clusters, random_state=self.random_seed)
-            results = self.bench_cluster(algo=em, name="em", n_clusters=n_clusters, data=scaled_data)
+            results = self.bench_cluster(em, "em", n_clusters, scaled_data, gen_results)
             em_results = pd.concat([em_results, results])
 
-        self.plot_cluster_results(data_set, 'K-Means', kmeans_results)
-        self.plot_cluster_results(data_set, 'Expectation Maximization', em_results)
+        if gen_results:
+            self.plot_cluster_results(data_set, 'K-Means', kmeans_results)
+            self.plot_cluster_results(data_set, 'Expectation Maximization', em_results)
 
-        plt.savefig(f'images/part{part}/{data_set}_Silhouette_Scores_{algo}.png')
-        plt.close()
+            plt.savefig(f'images/part{part}/{data_set}_Silhouette_Scores_{algo}.png')
+            plt.close()
 
         best_kmeans_n = kmeans_results.query('silhouette == silhouette.max()').clusters[0]
         best_em_n = em_results.query('silhouette == silhouette.max()').clusters[0]
@@ -481,29 +542,28 @@ class experiments:
         plt.savefig(f"images/part{part}/pairplot_{data_set}_{algo}_{algo2}.png", dpi=300)
         plt.close()
 
-    def run_kmeans(self, n, scaled_data, data, data_set, part, algo=''):
+    def run_kmeans(self, n, scaled_data, data, data_set, part, algo='', gen_results=True):
         kmeans = KMeans(init="k-means++", n_clusters=n, n_init=10, random_state=self.random_seed)
         kmeans.fit(scaled_data)
         kmeans_pred = kmeans.predict(scaled_data)
-        data_kmeans = data.copy()
-        data_kmeans['cluster'] = kmeans_pred
-        self.generate_pair_plot(data_kmeans, data_set, part, 'kmeans', algo)
+        if gen_results:
+            data_kmeans = data.copy()
+            data_kmeans['cluster'] = kmeans_pred
+            self.generate_pair_plot(data_kmeans, data_set, part, 'kmeans', algo)
         return kmeans, kmeans_pred
 
-    def run_em(self, n, scaled_data, data, data_set, part, algo=''):
+    def run_em(self, n, scaled_data, data, data_set, part, algo='', gen_results=True):
         em = GaussianMixture(n_components=n, random_state=self.random_seed)
         em.fit(scaled_data)
         em_pred = em.predict(scaled_data)
-        data_em = data.copy()
-        data_em['cluster'] = em_pred
-        self.generate_pair_plot(data_em, data_set, part, 'em', algo)
+        if gen_results:
+            data_em = data.copy()
+            data_em['cluster'] = em_pred
+            self.generate_pair_plot(data_em, data_set, part, 'em', algo)
         return em, em_pred
 
     def bench_kmeans(self, scaler, kmeans, columns, labels, kmeans_pred):
-        if columns == None:
-            kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_))
-        else:
-            kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=columns)
+        kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=columns)
         self.write_to_output(100 * "_")
         self.write_to_output("K-Means Centers")
         self.write_to_output(kmeans_centers.to_string(header=True, index=False))
@@ -515,10 +575,7 @@ class experiments:
         self.write_to_output(100 * "_")
 
     def bench_em(self, scaler, em, columns, labels, em_pred):
-        if columns == None:
-            em_means = pd.DataFrame(scaler.inverse_transform(em.means_))
-        else:
-            em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=columns)
+        em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=columns)
         self.write_to_output(100 * "_")
         self.write_to_output("EM Means")
         self.write_to_output(em_means.to_string(header=True, index=False))
@@ -541,6 +598,22 @@ class experiments:
         self.write_to_output(100 * "_")
         return data, scaled_data, labels, scaler
 
+    def data_prep_nn(self, data_set):
+        x = self.datasets[data_set]["x"]
+        y = self.datasets[data_set]["y"]
+
+        x_train, x_test, y_train, y_test = train_test_split(
+            x,
+            y,
+            test_size=0.2,
+            random_state=self.random_seed
+        )
+        # MLP is sensitive to feature scaling, so it is recommended to scale the data (https://scikit-learn.org/stable/modules/neural_networks_supervised.html)
+        scaler = StandardScaler()
+        scaler.fit(x_train)
+        x_train = scaler.transform(x_train)
+        x_test = scaler.transform(x_test)
+        return x_train, y_train, x_test, y_test, scaler
 
     def part1_experiment(self):
         for data_set in self.datasets:
@@ -559,17 +632,14 @@ class experiments:
     def part2_experiment(self):
         for data_set in self.datasets:
             self.write_to_output(f"\nPART 2 RESULTS FOR {data_set} \n" + 100 * "_")
+            data, scaled_data, labels, scaler = self.data_prep(data_set)
 
-            data = self.datasets[data_set]["x"]
-            labels = self.datasets[data_set]["y"]
-
-            scaler = StandardScaler()
-            scaled_data = scaler.fit_transform(data)
-
-            self.run_pca(scaled_data, labels, data_set, '2')
-            self.run_ica(scaled_data, labels, data_set, '2')
+            _, pca = self.run_pca(scaled_data, labels, data_set, '2')
+            _, ica = self.run_ica(scaled_data, labels, data_set, '2')
             self.run_rca(scaled_data, labels, data_set, '2')
             self.run_lda(scaled_data, labels, data_set, '2')
+
+            self.generation_projections(scaled_data, pca, ica, data_set, '2')
 
         self.kurtosis_plot('ICA', '2')
         self.kurtosis_plot('RCA', '2')
@@ -579,10 +649,10 @@ class experiments:
             self.write_to_output(f"\nPART 3 RESULTS FOR {data_set} \n" + 100 * "_")
             data, scaled_data, labels, scaler = self.data_prep(data_set)
 
-            pca = self.run_pca(scaled_data, labels, data_set, '3')
-            ica = self.run_ica(scaled_data, labels, data_set, '3')
-            rca = self.run_rca(scaled_data, labels, data_set, '3')
-            lda = self.run_lda(scaled_data, labels, data_set, '3')
+            pca, _ = self.run_pca(scaled_data, labels, data_set, '3', False)
+            ica, _ = self.run_ica(scaled_data, labels, data_set, '3', False)
+            rca, _ = self.run_rca(scaled_data, labels, data_set, '3', False)
+            lda, _ = self.run_lda(scaled_data, labels, data_set, '3', False)
 
             reduced_data = {'pca': pca, 'ica': ica, 'rca': rca, 'lda': lda}
 
@@ -591,11 +661,8 @@ class experiments:
                 self.run_kmeans_sa(reduced, data_set, '3', algo_name)
                 best_kmeans_n, best_em_n = self.run_kmeans_em(reduced, data_set, '3', algo_name)
 
-                kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, reduced, data, data_set, '3', algo_name)
-                em, em_pred = self.run_em(best_em_n, reduced, data, data_set, '3', algo_name)
-
-                self.bench_kmeans(scaler, kmeans, None, labels, kmeans_pred)
-                self.bench_em(scaler, em, None, labels, em_pred)
+                self.run_kmeans(best_kmeans_n, reduced, data, data_set, '3', algo_name)
+                self.run_em(best_em_n, reduced, data, data_set, '3', algo_name)
 
         self.kurtosis_plot('ICA', '3')
         self.kurtosis_plot('RCA', '3')
@@ -603,30 +670,53 @@ class experiments:
     def part4_experiment(self):
         data_set = 'Weather Data'
         self.write_to_output(f"PART 4 RESULTS FOR {data_set} \n" + 100 * "_")
-        data, scaled_data, labels, scaler = self.data_prep(data_set)
+        x_train, y_train, x_test, y_test, scaler = self.data_prep_nn(data_set)
 
-        pca = self.run_pca(scaled_data, labels, data_set, '4')
-        ica = self.run_ica(scaled_data, labels, data_set, '4')
-        rca = self.run_rca(scaled_data, labels, data_set, '4')
-        lda = self.run_lda(scaled_data, labels, data_set, '4')
+        pca_data, pca_model = self.run_pca(x_train, y_train, data_set, '4', False)
+        ica_data, ica_model = self.run_ica(x_train, y_train, data_set, '4', False)
+        rca_data, rca_model = self.run_rca(x_train, y_train, data_set, '4', False)
+        lda_data, lda_model = self.run_lda(x_train, y_train, data_set, '4', False)
 
         self.kurtosis_plot('ICA', '4')
         self.kurtosis_plot('RCA', '4')
 
-        reduced_data = {'pca': pca, 'ica': ica, 'rca': rca, 'lda': lda}
+        reduced_data = {'pca': [pca_data, pca_model], 'ica': [ica_data, ica_model], 'rca': [rca_data, rca_model], 'lda': [lda_data, lda_model]}
 
-        for i, (algo_name, reduced) in enumerate(reduced_data.items()):
+        for i, (algo_name, [reduced_x, model]) in enumerate(reduced_data.items()):
+            reduced_x_test = model.transform(x_test)
             self.write_to_output(f"{algo_name} \n" + 100 * "_")
-            self.neural_net_experiment(data_set, reduced, labels, algo_name, '4')
+            self.neural_net_experiment(data_set, reduced_x, y_train, reduced_x_test, y_test, '4', algo_name)
 
         self.write_to_output(f"Original Data \n" + 100 * "_")
-        self.neural_net_experiment(data_set, scaled_data, labels, 'Original Data', '4')
+        self.neural_net_experiment(data_set, x_train, y_train, x_test, y_test, '4', 'Original Data')
+
+    def part5_experiment(self):
+        data_set = 'Weather Data'
+        self.write_to_output(f"PART 5 RESULTS FOR {data_set} \n" + 100 * "_")
+        x_train, y_train, x_test, y_test, scaler = self.data_prep_nn(data_set)
+
+        best_kmeans_n, best_em_n = self.run_kmeans_em(x_train, data_set, '5', False)
+        kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, x_train, None, data_set, '5', False)
+        em, em_pred = self.run_em(best_em_n, x_train, None, data_set, '5', False)
+
+        x_train = np.column_stack((x_train, kmeans_pred))
+        x_train = np.column_stack((x_train, em_pred))
+
+        kmeans_test_pred = kmeans.predict(x_test)
+        em_test_pred = em.predict(x_test)
+
+        x_test = np.column_stack((x_test, kmeans_test_pred))
+        x_test = np.column_stack((x_test, em_test_pred))
+
+        self.neural_net_experiment(data_set, x_train, y_train, x_test, y_test,  '5', 'Cluster')
+
 
 exp = experiments()
 np.random.seed(exp.random_seed)
 exp.prep_weather_data()
 exp.prep_heart_data()
-# exp.part1_experiment()
-# exp.part2_experiment()
+exp.part1_experiment()
+exp.part2_experiment()
 exp.part3_experiment()
 exp.part4_experiment()
+exp.part5_experiment()

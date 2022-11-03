@@ -401,3 +401,477 @@ EM Confusion Matrix
  [[20045 34701]
   [    0     0]]]
 ____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.102s	0.239
+Silhouette analysis
+em       	2	0.156s	0.240
+Silhouette analysis
+k-means++	3	0.164s	0.232
+Silhouette analysis
+em       	3	0.248s	0.094
+Silhouette analysis
+k-means++	4	0.199s	0.107
+Silhouette analysis
+em       	4	0.347s	0.064
+Silhouette analysis
+k-means++	5	0.259s	0.088
+Silhouette analysis
+em       	5	0.775s	0.071
+
+PART 3 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
+RCA performance on Heart Data 
+____________________________________________________________________________________________________
+Accuracy -23.4727010823453
+knn accuracy 0.750958904109589
+ICA performance on Heart Data 
+____________________________________________________________________________________________________
+knn accuracy 0.7487671232876713
+RCA performance on Heart Data 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+LDA performance on Heart Data 
+____________________________________________________________________________________________________
+Accuracy 0.7520547945205479
+knn accuracy 0.7495890410958904
+RESULTS FOR pca
+Silhouette analysis
+k-means++	2	0.101s	0.074
+Silhouette analysis
+em       	2	0.184s	0.075
+Silhouette analysis
+k-means++	3	0.137s	0.139
+Silhouette analysis
+em       	3	0.253s	0.208
+Silhouette analysis
+k-means++	4	0.212s	0.095
+Silhouette analysis
+em       	4	0.347s	0.089
+Silhouette analysis
+k-means++	5	0.232s	0.136
+Silhouette analysis
+em       	5	0.462s	0.086
+RESULTS FOR ica
+Silhouette analysis
+k-means++	2	0.111s	0.239
+Silhouette analysis
+em       	2	0.157s	0.240
+Silhouette analysis
+k-means++	3	0.154s	0.232
+Silhouette analysis
+em       	3	0.206s	0.094
+Silhouette analysis
+k-means++	4	0.195s	0.107
+Silhouette analysis
+em       	4	0.341s	0.064
+Silhouette analysis
+k-means++	5	0.262s	0.088
+Silhouette analysis
+em       	5	0.796s	0.071
+RESULTS FOR rca
+Silhouette analysis
+k-means++	2	0.149s	0.291
+Silhouette analysis
+em       	2	0.244s	0.361
+Silhouette analysis
+k-means++	3	0.150s	0.322
+Silhouette analysis
+em       	3	0.568s	0.213
+Silhouette analysis
+k-means++	4	0.151s	0.363
+Silhouette analysis
+em       	4	0.753s	0.313
+Silhouette analysis
+k-means++	5	0.259s	0.300
+Silhouette analysis
+em       	5	1.208s	0.247
+RESULTS FOR lda
+Silhouette analysis
+k-means++	2	0.098s	0.554
+Silhouette analysis
+em       	2	0.095s	0.557
+Silhouette analysis
+k-means++	3	0.133s	0.544
+Silhouette analysis
+em       	3	0.126s	0.538
+Silhouette analysis
+k-means++	4	0.156s	0.534
+Silhouette analysis
+em       	4	0.152s	0.534
+Silhouette analysis
+k-means++	5	0.175s	0.529
+Silhouette analysis
+em       	5	0.185s	0.527
+
+PART 3 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+RCA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy -13.764786615716293
+knn accuracy 0.8554590570719603
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+RESULTS FOR pca
+Silhouette analysis
+k-means++	2	0.231s	0.205
+Silhouette analysis
+em       	2	0.582s	0.208
+Silhouette analysis
+k-means++	3	0.271s	0.121
+Silhouette analysis
+em       	3	1.239s	0.073
+Silhouette analysis
+k-means++	4	0.297s	0.090
+Silhouette analysis
+em       	4	1.454s	0.041
+Silhouette analysis
+k-means++	5	0.459s	0.091
+Silhouette analysis
+em       	5	1.798s	0.026
+RESULTS FOR ica
+Silhouette analysis
+k-means++	2	0.223s	0.210
+Silhouette analysis
+em       	2	0.142s	0.209
+Silhouette analysis
+k-means++	3	0.260s	0.115
+Silhouette analysis
+em       	3	1.085s	0.094
+Silhouette analysis
+k-means++	4	0.262s	0.135
+Silhouette analysis
+em       	4	1.990s	0.112
+Silhouette analysis
+k-means++	5	0.366s	0.132
+Silhouette analysis
+em       	5	3.898s	0.047
+RESULTS FOR rca
+Silhouette analysis
+k-means++	2	0.177s	0.254
+Silhouette analysis
+em       	2	0.752s	0.070
+Silhouette analysis
+k-means++	3	0.352s	0.252
+Silhouette analysis
+em       	3	0.761s	0.028
+Silhouette analysis
+k-means++	4	0.388s	0.180
+Silhouette analysis
+em       	4	0.958s	-0.013
+Silhouette analysis
+k-means++	5	0.300s	0.187
+Silhouette analysis
+em       	5	2.140s	-0.048
+RESULTS FOR lda
+Silhouette analysis
+k-means++	2	0.098s	0.605
+Silhouette analysis
+em       	2	0.083s	0.616
+Silhouette analysis
+k-means++	3	0.132s	0.562
+Silhouette analysis
+em       	3	0.123s	0.556
+Silhouette analysis
+k-means++	4	0.188s	0.536
+Silhouette analysis
+em       	4	0.166s	0.538
+Silhouette analysis
+k-means++	5	0.228s	0.532
+Silhouette analysis
+em       	5	0.188s	0.532
+PART 4 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+RCA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy -13.764786615716293
+knn accuracy 0.8554590570719603
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+pca 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH 4 REDUCED DATA 
+ ___________________________________________________
+PART 4 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy -13.764786615716293
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+Accuracy -14.965049819248792
+knn accuracy 0.848103509393832
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+pca 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH 4 REDUCED DATA 
+ ___________________________________________________
+PART 4 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy -13.764786615716293
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+Accuracy -14.965049819248792
+knn accuracy 0.848103509393832
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+pca 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH pca REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 10.52472638686498
+Score time: 0.004670841164059109
+PART 4 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy -13.764786615716293
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+Accuracy -14.965049819248792
+knn accuracy 0.848103509393832
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+pca 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH pca REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 10.076780800024666
+Score time: 0.004666362868414984
+Train accuracy: 0.8515375753278979 | Test accuracy: 0.8490783410138248
+ica 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH ica REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 9.818643621603648
+Score time: 0.004785953627692328
+Train accuracy: 0.8527782701169798 | Test accuracy: 0.8517369727047146
+rca 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH rca REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 8.980304368336995
+Score time: 0.004509431786007352
+Train accuracy: 0.8537531017369727 | Test accuracy: 0.8552818149592343
+lda 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH lda REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.0001, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20,), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 2.962257738908132
+Score time: 0.0037120713127983948
+Train accuracy: 0.8498980857851826 | Test accuracy: 0.8540411201701524
+Original Data 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH Original Data REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 12.168449025683934
+Score time: 0.005102769533793132
+Train accuracy: 0.8595799361928395 | Test accuracy: 0.8552818149592343
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.182s	0.202
+Silhouette analysis
+em       	2	0.475s	0.203
+Silhouette analysis
+k-means++	3	0.204s	0.179
+Silhouette analysis
+em       	3	0.808s	0.056
+Silhouette analysis
+k-means++	4	0.665s	0.144
+Silhouette analysis
+em       	4	1.851s	0.008
+Silhouette analysis
+k-means++	5	0.354s	0.154
+Silhouette analysis
+em       	5	1.671s	-0.001
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.199s	0.202
+Silhouette analysis
+em       	2	0.346s	0.204
+Silhouette analysis
+k-means++	3	0.168s	0.181
+Silhouette analysis
+em       	3	0.944s	0.075
+Silhouette analysis
+k-means++	4	0.326s	0.150
+Silhouette analysis
+em       	4	2.176s	0.032
+Silhouette analysis
+k-means++	5	0.345s	0.154
+Silhouette analysis
+em       	5	1.369s	-0.007
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.178s	0.202
+Silhouette analysis
+em       	2	0.364s	0.204
+Silhouette analysis
+k-means++	3	0.175s	0.181
+Silhouette analysis
+em       	3	0.910s	0.075
+Silhouette analysis
+k-means++	4	0.351s	0.150
+Silhouette analysis
+em       	4	2.201s	0.032
+Silhouette analysis
+k-means++	5	0.379s	0.154
+Silhouette analysis
+em       	5	1.148s	-0.007
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.190s	0.202
+Silhouette analysis
+em       	2	0.402s	0.204
+Silhouette analysis
+k-means++	3	0.186s	0.181
+Silhouette analysis
+em       	3	0.948s	0.075
+Silhouette analysis
+k-means++	4	0.370s	0.150
+Silhouette analysis
+em       	4	2.195s	0.032
+Silhouette analysis
+k-means++	5	0.380s	0.154
+Silhouette analysis
+em       	5	1.104s	-0.007
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.176s	0.202
+Silhouette analysis
+em       	2	0.360s	0.204
+Silhouette analysis
+k-means++	3	0.179s	0.181
+Silhouette analysis
+em       	3	0.885s	0.075
+Silhouette analysis
+k-means++	4	0.342s	0.150
+Silhouette analysis
+em       	4	2.197s	0.032
+Silhouette analysis
+k-means++	5	0.342s	0.154
+Silhouette analysis
+em       	5	1.063s	-0.007
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.176s	0.202
+Silhouette analysis
+em       	2	0.380s	0.204
+Silhouette analysis
+k-means++	3	0.177s	0.181
+Silhouette analysis
+em       	3	0.906s	0.075
+Silhouette analysis
+k-means++	4	0.345s	0.150
+Silhouette analysis
+em       	4	2.179s	0.032
+Silhouette analysis
+k-means++	5	0.343s	0.154
+Silhouette analysis
+em       	5	1.207s	-0.007
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+Silhouette analysis
+k-means++	2	0.151s	0.202
+Silhouette analysis
+em       	2	0.334s	0.204
+Silhouette analysis
+k-means++	3	0.174s	0.181
+Silhouette analysis
+em       	3	1.691s	0.075
+Silhouette analysis
+k-means++	4	0.311s	0.150
+Silhouette analysis
+em       	4	2.205s	0.032
+Silhouette analysis
+k-means++	5	0.320s	0.154
+Silhouette analysis
+em       	5	1.083s	-0.007
+NEURAL NETWORK FOR Weather Data WITH Cluster REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 12.914826975928413
+Score time: 0.004880004458957248
+Train accuracy: 0.861906238922368 | Test accuracy: 0.858649415101028
+PART 1 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
