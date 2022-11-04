@@ -347,7 +347,7 @@ class experiments:
             x_train, x_test, y_train, y_test = self.split_data(x, y)
             pca.fit(x_train, y_train)
             self.write_to_output(f"PCA performance on {data_set} \n" + 100 * "_")
-            self.score_dim_red(pca, x_test, y_test)
+            self.score_dim_red(pca, x_test, y_test, 'PCA')
             self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
 
         if data_set == 'Weather Data':
@@ -360,7 +360,7 @@ class experiments:
             x_train, x_test, y_train, y_test = self.split_data(x, y)
             pca.fit(x_train, y_train)
             self.write_to_output(f"PCA performance on {data_set} - {n} components \n" + 100 * "_")
-            self.score_dim_red(pca, x_test, y_test)
+            self.score_dim_red(pca, x_test, y_test, 'PCA')
             self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
         return x_pca, pca
 
@@ -381,6 +381,7 @@ class experiments:
             x_train, x_test, y_train, y_test = self.split_data(x, y)
             ica.fit(x_train, y_train)
             self.write_to_output(f"ICA performance on {data_set} \n" + 100 * "_")
+            self.score_dim_red(ica, x_test, y_test, 'ICA')
             self.bench_on_knn(ica, x_train, y_train, x_test, y_test)
         return ica.fit_transform(x), ica
 
@@ -396,12 +397,15 @@ class experiments:
             plt.plot(kurtosis, label=f"{data_set} Kurtosis")
 
         n = kurtosis['kurtosis'].astype('float').idxmax()
-        rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
-        if gen_results:
-            x_train, x_test, y_train, y_test = self.split_data(x, y)
-            rca.fit(x_train, y_train)
-            self.write_to_output(f"RCA performance on {data_set} \n" + 100 * "_")
-            self.bench_on_knn(rca, x_train, y_train, x_test, y_test)
+        for i in range(1, 6):
+            rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
+            if gen_results:
+                x_train, x_test, y_train, y_test = self.split_data(x, y)
+                rca.fit(x_train, y_train)
+                self.write_to_output(f"RCA performance on {data_set} - iteration {i} \n" + 100 * "_")
+                self.bench_on_knn(rca, x_train, y_train, x_test, y_test)
+                self.score_dim_red(rca, x_test, y_test, 'RCA')
+            i += 1
         return rca.fit_transform(x), rca
 
     def run_lda(self, x, y, data_set, part, gen_results=True):
@@ -410,7 +414,7 @@ class experiments:
             x_train, x_test, y_train, y_test = self.split_data(x, y)
             lda.fit(x_train, y_train)
             self.write_to_output(f"LDA performance on {data_set} \n" + 100 * "_")
-            self.score_dim_red(lda, x_test, y_test)
+            self.score_dim_red(lda, x_test, y_test, 'LDA')
             self.bench_on_knn(lda, x_train, y_train, x_test, y_test)
         return lda.fit_transform(x, y), lda
 
@@ -419,9 +423,15 @@ class experiments:
             x, y, test_size=0.2, random_state=self.random_seed
         )
 
-    def score_dim_red(self, model, x_test, y_test):
-        acc = model.score(x_test, y_test)
-        self.write_to_output(f"Accuracy {acc}")
+    def score_dim_red(self, model, x_test, y_test, model_name=''):
+        if model_name != 'ICA' and model_name != 'RCA':
+            acc = model.score(x_test, y_test)
+            self.write_to_output(f"{model_name} Accuracy {acc}")
+        if model_name != 'LDA':
+            x_test_transform = model.transform(x_test)
+            x_test_projected = model.inverse_transform(x_test_transform)
+            recon_error = np.sum((x_test - x_test_projected)**2, axis=1).mean()
+            self.write_to_output(f"{model_name} Reconstruction Error {recon_error}")
 
     def bench_on_knn(self, model, x_train, y_train, x_test, y_test):
         knn = KNeighborsClassifier(n_neighbors=50)
@@ -437,58 +447,6 @@ class experiments:
         plt.legend(loc='best')
         plt.tight_layout()
         plt.savefig(f'images/part{part}/{algorithm}_kurtosis.png')
-        plt.close()
-
-    def plot_samples(self, S, axis_list=None):
-        plt.scatter(
-            S[:, 0], S[:, 1], s=2, marker="o", zorder=10, color="steelblue", alpha=0.5
-        )
-        if axis_list is not None:
-            for axis, color, label in axis_list:
-                axis /= axis.std()
-                x_axis, y_axis = axis
-                plt.quiver(
-                    (0, 0),
-                    (0, 0),
-                    x_axis,
-                    y_axis,
-                    zorder=11,
-                    width=0.01,
-                    scale=6,
-                    color=color,
-                    label=label,
-                )
-
-        plt.hlines(0, -3, 3)
-        plt.vlines(0, -3, 3)
-        plt.xlim(-3, 3)
-        plt.ylim(-3, 3)
-        plt.xlabel("x")
-        plt.ylabel("y")
-
-    def generation_projections(self, data, pca, ica, data_set, part):
-        S_pca_ = pca.fit(data).transform(data)
-        S_ica_ = ica.fit(data).transform(data)
-        S_ica_ /= S_ica_.std(axis=0)
-        plt.figure(part+data_set)
-
-        axis_list = [(pca.components_.T, "orange", "PCA"), (ica.mixing_, "red", "ICA")]
-        plt.subplot(2, 2, 1)
-        self.plot_samples(data / np.std(data), axis_list=axis_list)
-        legend = plt.legend(loc="lower right")
-        legend.set_zorder(100)
-        plt.title("Observations")
-
-        plt.subplot(2, 2, 2)
-        self.plot_samples(S_pca_ / np.std(S_pca_, axis=0))
-        plt.title("PCA recovered signals")
-
-        plt.subplot(2, 2, 3)
-        self.plot_samples(S_ica_ / np.std(S_ica_))
-        plt.title("ICA recovered signals")
-
-        plt.subplots_adjust(0.09, 0.04, 0.94, 0.94, 0.26, 0.36)
-        plt.savefig(f'images/part{part}/{data_set}_pca_ica_projections.png')
         plt.close()
 
     def run_kmeans_sa(self, scaled_data, data_set, part, algo=''):
@@ -562,29 +520,31 @@ class experiments:
             self.generate_pair_plot(data_em, data_set, part, 'em', algo)
         return em, em_pred
 
-    def bench_kmeans(self, scaler, kmeans, columns, labels, kmeans_pred):
-        kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=columns)
-        self.write_to_output(100 * "_")
-        self.write_to_output("K-Means Centers")
-        self.write_to_output(kmeans_centers.to_string(header=True, index=False))
+    def bench_kmeans(self, scaler, kmeans, columns, labels, kmeans_pred, part='1', dataset=''):
+        if part != '3':
+            kmeans_centers = pd.DataFrame(scaler.inverse_transform(kmeans.cluster_centers_), columns=columns)
+            self.write_to_output(100 * "_")
+            self.write_to_output("K-Means Centers")
+            self.write_to_output(kmeans_centers.to_string(header=True, index=False))
 
-        kmeans_cm = metrics.multilabel_confusion_matrix(labels, kmeans_pred)
-        self.write_to_output(100 * "_")
-        self.write_to_output("K-Means Confusion Matrix")
-        self.write_to_output(np.array2string(kmeans_cm))
-        self.write_to_output(100 * "_")
+        km_cm = metrics.confusion_matrix(labels, kmeans_pred)
+        km_cm_plot = metrics.ConfusionMatrixDisplay(confusion_matrix=km_cm)
+        km_cm_plot.plot()
+        plt.savefig(f'images/part{part}/KM_confusion_matrix_{dataset}.png')
+        plt.close()
 
-    def bench_em(self, scaler, em, columns, labels, em_pred):
-        em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=columns)
-        self.write_to_output(100 * "_")
-        self.write_to_output("EM Means")
-        self.write_to_output(em_means.to_string(header=True, index=False))
+    def bench_em(self, scaler, em, columns, labels, em_pred, part='1', dataset=''):
+        if part != '3':
+            em_means = pd.DataFrame(scaler.inverse_transform(em.means_), columns=columns)
+            self.write_to_output(100 * "_")
+            self.write_to_output("EM Means")
+            self.write_to_output(em_means.to_string(header=True, index=False))
 
-        em_cm = metrics.multilabel_confusion_matrix(labels, em_pred)
-        self.write_to_output(100 * "_")
-        self.write_to_output("EM Confusion Matrix")
-        self.write_to_output(np.array2string(em_cm))
-        self.write_to_output(100 * "_")
+        em_cm = metrics.confusion_matrix(labels, em_pred)
+        em_cm_plot = metrics.ConfusionMatrixDisplay(confusion_matrix=em_cm)
+        em_cm_plot.plot()
+        plt.savefig(f'images/part{part}/EM_confusion_matrix_{dataset}.png')
+        plt.close()
 
     def data_prep(self, data_set):
         data = self.datasets[data_set]["x"]
@@ -626,8 +586,8 @@ class experiments:
             kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, scaled_data, data, data_set, '1')
             em, em_pred = self.run_em(best_em_n, scaled_data, data, data_set, '1')
 
-            self.bench_kmeans(scaler, kmeans, data.columns, labels, kmeans_pred)
-            self.bench_em(scaler, em, data.columns, labels, em_pred)
+            self.bench_kmeans(scaler, kmeans, data.columns, labels, kmeans_pred, '1', data_set)
+            self.bench_em(scaler, em, data.columns, labels, em_pred, '1', data_set)
 
     def part2_experiment(self):
         for data_set in self.datasets:
@@ -638,8 +598,6 @@ class experiments:
             _, ica = self.run_ica(scaled_data, labels, data_set, '2')
             self.run_rca(scaled_data, labels, data_set, '2')
             self.run_lda(scaled_data, labels, data_set, '2')
-
-            self.generation_projections(scaled_data, pca, ica, data_set, '2')
 
         self.kurtosis_plot('ICA', '2')
         self.kurtosis_plot('RCA', '2')
@@ -661,8 +619,11 @@ class experiments:
                 self.run_kmeans_sa(reduced, data_set, '3', algo_name)
                 best_kmeans_n, best_em_n = self.run_kmeans_em(reduced, data_set, '3', algo_name)
 
-                self.run_kmeans(best_kmeans_n, reduced, data, data_set, '3', algo_name)
-                self.run_em(best_em_n, reduced, data, data_set, '3', algo_name)
+                km, km_pred = self.run_kmeans(best_kmeans_n, reduced, data, data_set, '3', algo_name)
+                em, em_pred = self.run_em(best_em_n, reduced, data, data_set, '3', algo_name)
+
+                self.bench_kmeans(scaler, km, data.columns, labels, km_pred, '3', data_set + algo_name)
+                self.bench_em(scaler, em, data.columns, labels, em_pred, '3', data_set + algo_name)
 
         self.kurtosis_plot('ICA', '3')
         self.kurtosis_plot('RCA', '3')

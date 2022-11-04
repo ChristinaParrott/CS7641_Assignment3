@@ -3,21 +3,21 @@ ________________________________________________________________________________
 # labels: 2; # samples: 54746; # features 17
 ____________________________________________________________________________________________________
 Silhouette analysis
-k-means++	2	0.135s	0.186
+k-means++	2	0.122s	0.186
 Silhouette analysis
-em       	2	0.228s	0.232
+em       	2	0.224s	0.232
 Silhouette analysis
-k-means++	3	0.190s	0.197
+k-means++	3	0.181s	0.197
 Silhouette analysis
-em       	3	0.437s	0.153
+em       	3	0.541s	0.153
 Silhouette analysis
-k-means++	4	0.246s	0.142
+k-means++	4	0.243s	0.142
 Silhouette analysis
-em       	4	1.194s	0.054
+em       	4	1.157s	0.054
 Silhouette analysis
-k-means++	5	0.285s	0.091
+k-means++	5	0.291s	0.091
 Silhouette analysis
-em       	5	2.111s	0.040
+em       	5	2.072s	0.040
 ____________________________________________________________________________________________________
 K-Means Centers
      Sex  AgeCategory     Race  Diabetic  GenHealth       BMI  Smoking  AlcoholDrinking   Stroke  PhysicalHealth  MentalHealth  DiffWalking  PhysicalActivity  SleepTime   Asthma  KidneyDisease  SkinCancer
@@ -25,853 +25,292 @@ K-Means Centers
 0.460487     9.143833 4.397543  1.003244   1.989992 31.407779 0.627511     4.831251e-04 0.240803       15.371799      8.027400     0.778453          0.390779   6.962040 0.272759       0.212230    0.178756
 0.553103     7.317113 4.476611  0.298272   2.273241 27.882235 0.421543     2.171874e-15 0.038354        1.564112      2.559886     0.039000          0.836868   7.175378 0.108494       0.028395    0.116784
 ____________________________________________________________________________________________________
-K-Means Confusion Matrix
-[[[26239  1134]
-  [25404  1969]]
-
- [[24166  3207]
-  [16114 11259]]
-
- [[17569 37177]
-  [    0     0]]]
-____________________________________________________________________________________________________
-____________________________________________________________________________________________________
 EM Means
      Sex  AgeCategory     Race  Diabetic  GenHealth       BMI  Smoking  AlcoholDrinking   Stroke  PhysicalHealth  MentalHealth  DiffWalking  PhysicalActivity  SleepTime   Asthma  KidneyDisease  SkinCancer
 0.512627     9.371253 4.468728  1.011329   2.090866 30.320356 0.546613         0.026198 0.204862       11.450791      5.879396     0.520651          0.540241   7.139249 0.225867   1.000000e+00    0.220675
 0.527431     7.623295 4.460967  0.436477   2.207112 28.683346 0.486052         0.059376 0.083866        4.852224      4.043893     0.218179          0.728900   7.113465 0.147677  -6.938894e-17    0.125839
-____________________________________________________________________________________________________
-EM Confusion Matrix
-[[[23918  3455]
-  [26591   782]]
-
- [[  782 26591]
-  [ 3455 23918]]]
-____________________________________________________________________________________________________
 PART 1 RESULTS FOR Weather Data 
 ____________________________________________________________________________________________________
 # labels: 2; # samples: 56420; # features 13
 ____________________________________________________________________________________________________
 Silhouette analysis
-k-means++	2	0.149s	0.204
+k-means++	2	0.141s	0.204
 Silhouette analysis
-em       	2	0.440s	0.206
+em       	2	0.400s	0.206
 Silhouette analysis
-k-means++	3	0.200s	0.181
+k-means++	3	0.187s	0.181
 Silhouette analysis
-em       	3	0.726s	0.065
+em       	3	0.714s	0.065
 Silhouette analysis
-k-means++	4	0.721s	0.146
+k-means++	4	0.628s	0.146
 Silhouette analysis
-em       	4	1.582s	0.002
+em       	4	1.585s	0.002
 Silhouette analysis
-k-means++	5	0.531s	0.153
+k-means++	5	0.347s	0.153
 Silhouette analysis
-em       	5	1.625s	0.004
+em       	5	1.544s	0.004
 ____________________________________________________________________________________________________
 K-Means Centers
   MinTemp   MaxTemp  Rainfall  Evaporation  Sunshine  WindGustSpeed  WindSpeed3pm  Humidity3pm  Pressure3pm  Cloud3pm   Temp3pm  RainToday    Month
 10.008999 19.009179  3.277894     3.395645  5.770629      40.192647     19.117523    58.510150  1017.249389  5.289191 17.589881   0.336954 6.804298
 17.240457 29.911550  0.876671     7.805727  9.882531      41.625473     20.517988    39.869149  1012.114609  3.274720 28.304810   0.094058 6.010608
 ____________________________________________________________________________________________________
-K-Means Confusion Matrix
-[[[ 3388  9039]
-  [23577 20416]]
-
- [[20416 23577]
-  [ 9039  3388]]]
-____________________________________________________________________________________________________
-____________________________________________________________________________________________________
 EM Means
   MinTemp   MaxTemp  Rainfall  Evaporation  Sunshine  WindGustSpeed  WindSpeed3pm  Humidity3pm  Pressure3pm  Cloud3pm   Temp3pm     RainToday    Month
 14.054718 21.315335  9.383221     3.989223  5.414147      44.540844     21.155352    64.222597  1013.452207  5.679024 19.776248  1.000000e+00 6.442947
 13.297520 25.042447  0.074237     5.932326  8.393760      39.838778     19.398790    45.457073  1015.176423  3.943082 23.542140 -1.110223e-16 6.419924
-____________________________________________________________________________________________________
-EM Confusion Matrix
-[[[ 6684  5743]
-  [37274  6719]]
-
- [[ 6719 37274]
-  [ 5743  6684]]]
-
 PART 2 RESULTS FOR Heart Data 
 ____________________________________________________________________________________________________
-PCA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy -23.4727010823453
-knn accuracy 0.750958904109589
-knn accuracy 0.7487671232876713
-knn accuracy 0.6749771689497717
-LDA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy 0.7520547945205479
-knn accuracy 0.7495890410958904
-PART 2 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-PCA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy -13.764786615716293
-knn accuracy 0.8554590570719603
-knn accuracy 0.8503190358029068
-knn accuracy 0.8404820985466147
-LDA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy 0.8527118043247075
-knn accuracy 0.8513824884792627
-PART 3 RESULTS FOR Heart Data 
-____________________________________________________________________________________________________
 # labels: 2; # samples: 54746; # features 17
 ____________________________________________________________________________________________________
 PCA performance on Heart Data 
 ____________________________________________________________________________________________________
-Accuracy -23.4727010823453
+PCA Accuracy -23.4727010823453
+PCA Reconstruction Error 3.029053928447677e-29
 knn accuracy 0.750958904109589
+PCA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+PCA Accuracy -23.48487974672447
+PCA Reconstruction Error 1.7078148266757058
 knn accuracy 0.7487671232876713
-knn accuracy 0.6749771689497717
-LDA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy 0.7520547945205479
-knn accuracy 0.7495890410958904
-Silhouette analysis
-k-means++	2	0.100s	0.074
-Silhouette analysis
-em       	2	0.193s	0.075
-Silhouette analysis
-k-means++	3	0.137s	0.139
-Silhouette analysis
-em       	3	0.268s	0.208
-Silhouette analysis
-k-means++	4	0.221s	0.095
-Silhouette analysis
-em       	4	0.385s	0.089
-Silhouette analysis
-k-means++	5	0.261s	0.136
-Silhouette analysis
-em       	5	0.914s	0.086
-____________________________________________________________________________________________________
-K-Means Centers
-     Sex  AgeCategory     Race  Diabetic  GenHealth       BMI  Smoking  AlcoholDrinking   Stroke  PhysicalHealth  MentalHealth  DiffWalking  PhysicalActivity  SleepTime   Asthma  KidneyDisease  SkinCancer
-0.230741     9.516197 7.359447  0.990915   2.994012 40.040403 0.224711         0.360124 0.551417       -2.451531     12.365796     0.324095          0.894164   6.070973 0.171524       0.043636    0.160041
-1.610345     7.980734 4.356739  0.401652   2.288330 28.435432 0.488907         0.026854 0.079230        5.904925      4.142803     0.248296          0.742491   6.927841 0.205604       0.097509    0.078397
-0.128216     7.525149 4.260425  0.469308   2.096463 28.018198 0.513671         0.043157 0.060424        5.804184      3.519617     0.232082          0.688283   7.275860 0.132012       0.072369    0.152299
-____________________________________________________________________________________________________
-K-Means Confusion Matrix
-[[[26239  1134]
-  [25404  1969]]
-
- [[24166  3207]
-  [16114 11259]]
-
- [[17569 37177]
-  [    0     0]]]
-____________________________________________________________________________________________________
-____________________________________________________________________________________________________
-EM Means
-     Sex  AgeCategory     Race  Diabetic  GenHealth       BMI  Smoking  AlcoholDrinking    Stroke  PhysicalHealth  MentalHealth  DiffWalking  PhysicalActivity  SleepTime   Asthma  KidneyDisease  SkinCancer
-1.615178     5.759273 3.748437  0.288445   2.232315 25.157723 0.611056         0.330401  0.649263       12.646598     -6.297869     0.127076          1.008775   8.051820 0.186781       0.066112    0.127853
-1.257084     7.959138 4.678553  0.386087   2.461498 29.216690 0.535497        -0.010404 -0.036813        4.520090      7.616496     0.247322          0.706946   6.646518 0.260128       0.096986    0.089237
-0.060451     7.911327 4.449801  0.547691   2.073967 29.070744 0.455661         0.054018  0.084576        4.857509      3.903354     0.252958          0.681693   7.214740 0.101227       0.069847    0.153845
-____________________________________________________________________________________________________
-EM Confusion Matrix
-[[[23918  3455]
-  [26591   782]]
-
- [[22995  4378]
-  [15943 11430]]
-
- [[20045 34701]
-  [    0     0]]]
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.105s	0.239
-Silhouette analysis
-em       	2	0.158s	0.240
-Silhouette analysis
-k-means++	3	0.151s	0.232
-Silhouette analysis
-em       	3	0.212s	0.094
-Silhouette analysis
-k-means++	4	0.198s	0.107
-Silhouette analysis
-em       	4	0.369s	0.064
-Silhouette analysis
-k-means++	5	0.266s	0.088
-Silhouette analysis
-em       	5	0.784s	0.071
-
-PART 2 RESULTS FOR Heart Data 
-____________________________________________________________________________________________________
-PCA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy -23.4727010823453
-knn accuracy 0.750958904109589
-knn accuracy 0.7487671232876713
-knn accuracy 0.6749771689497717
-LDA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy 0.7520547945205479
-knn accuracy 0.7495890410958904
-
-PART 2 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-PCA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy -13.764786615716293
-knn accuracy 0.8554590570719603
-knn accuracy 0.8503190358029068
-knn accuracy 0.8404820985466147
-LDA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy 0.8527118043247075
-knn accuracy 0.8513824884792627
-
-PART 3 RESULTS FOR Heart Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 54746; # features 17
-____________________________________________________________________________________________________
-PCA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy -23.4727010823453
-knn accuracy 0.750958904109589
-knn accuracy 0.7487671232876713
-knn accuracy 0.6749771689497717
-LDA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy 0.7520547945205479
-knn accuracy 0.7495890410958904
-Silhouette analysis
-k-means++	2	0.105s	0.074
-Silhouette analysis
-em       	2	0.188s	0.075
-Silhouette analysis
-k-means++	3	0.138s	0.139
-Silhouette analysis
-em       	3	0.295s	0.208
-Silhouette analysis
-k-means++	4	0.213s	0.095
-Silhouette analysis
-em       	4	0.338s	0.089
-Silhouette analysis
-k-means++	5	0.231s	0.136
-Silhouette analysis
-em       	5	0.414s	0.086
-
-PART 3 RESULTS FOR Heart Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 54746; # features 17
-____________________________________________________________________________________________________
-PCA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy -23.4727010823453
-knn accuracy 0.750958904109589
-knn accuracy 0.7487671232876713
-knn accuracy 0.6749771689497717
-LDA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy 0.7520547945205479
-knn accuracy 0.7495890410958904
-Silhouette analysis
-k-means++	2	0.119s	0.074
-Silhouette analysis
-em       	2	0.187s	0.075
-Silhouette analysis
-k-means++	3	0.145s	0.139
-Silhouette analysis
-em       	3	0.279s	0.208
-Silhouette analysis
-k-means++	4	0.230s	0.095
-Silhouette analysis
-em       	4	0.345s	0.089
-Silhouette analysis
-k-means++	5	0.253s	0.136
-Silhouette analysis
-em       	5	0.408s	0.086
-____________________________________________________________________________________________________
-K-Means Centers
-      0        1        2        3        4         5        6        7        8         9         10       11       12       13       14       15       16
-0.230741 9.516197 7.359447 0.990915 2.994012 40.040403 0.224711 0.360124 0.551417 -2.451531 12.365796 0.324095 0.894164 6.070973 0.171524 0.043636 0.160041
-1.610345 7.980734 4.356739 0.401652 2.288330 28.435432 0.488907 0.026854 0.079230  5.904925  4.142803 0.248296 0.742491 6.927841 0.205604 0.097509 0.078397
-0.128216 7.525149 4.260425 0.469308 2.096463 28.018198 0.513671 0.043157 0.060424  5.804184  3.519617 0.232082 0.688283 7.275860 0.132012 0.072369 0.152299
-____________________________________________________________________________________________________
-K-Means Confusion Matrix
-[[[26239  1134]
-  [25404  1969]]
-
- [[24166  3207]
-  [16114 11259]]
-
- [[17569 37177]
-  [    0     0]]]
-____________________________________________________________________________________________________
-____________________________________________________________________________________________________
-EM Means
-      0        1        2        3        4         5        6         7         8         9         10       11       12       13       14       15       16
-1.615178 5.759273 3.748437 0.288445 2.232315 25.157723 0.611056  0.330401  0.649263 12.646598 -6.297869 0.127076 1.008775 8.051820 0.186781 0.066112 0.127853
-1.257084 7.959138 4.678553 0.386087 2.461498 29.216690 0.535497 -0.010404 -0.036813  4.520090  7.616496 0.247322 0.706946 6.646518 0.260128 0.096986 0.089237
-0.060451 7.911327 4.449801 0.547691 2.073967 29.070744 0.455661  0.054018  0.084576  4.857509  3.903354 0.252958 0.681693 7.214740 0.101227 0.069847 0.153845
-____________________________________________________________________________________________________
-EM Confusion Matrix
-[[[23918  3455]
-  [26591   782]]
-
- [[22995  4378]
-  [15943 11430]]
-
- [[20045 34701]
-  [    0     0]]]
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.102s	0.239
-Silhouette analysis
-em       	2	0.155s	0.240
-Silhouette analysis
-k-means++	3	0.163s	0.232
-Silhouette analysis
-em       	3	0.243s	0.094
-Silhouette analysis
-k-means++	4	0.199s	0.107
-Silhouette analysis
-em       	4	0.387s	0.064
-Silhouette analysis
-k-means++	5	0.277s	0.088
-Silhouette analysis
-em       	5	0.814s	0.071
-
-PART 3 RESULTS FOR Heart Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 54746; # features 17
-____________________________________________________________________________________________________
-PCA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy -23.4727010823453
-knn accuracy 0.750958904109589
-knn accuracy 0.7487671232876713
-knn accuracy 0.6749771689497717
-LDA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy 0.7520547945205479
-knn accuracy 0.7495890410958904
-Silhouette analysis
-k-means++	2	0.099s	0.074
-Silhouette analysis
-em       	2	0.380s	0.075
-Silhouette analysis
-k-means++	3	0.140s	0.139
-Silhouette analysis
-em       	3	0.263s	0.208
-Silhouette analysis
-k-means++	4	0.244s	0.095
-Silhouette analysis
-em       	4	0.362s	0.089
-Silhouette analysis
-k-means++	5	0.325s	0.136
-Silhouette analysis
-em       	5	0.547s	0.086
-____________________________________________________________________________________________________
-K-Means Centers
-      0        1        2        3        4         5        6        7        8         9         10       11       12       13       14       15       16
-0.230741 9.516197 7.359447 0.990915 2.994012 40.040403 0.224711 0.360124 0.551417 -2.451531 12.365796 0.324095 0.894164 6.070973 0.171524 0.043636 0.160041
-1.610345 7.980734 4.356739 0.401652 2.288330 28.435432 0.488907 0.026854 0.079230  5.904925  4.142803 0.248296 0.742491 6.927841 0.205604 0.097509 0.078397
-0.128216 7.525149 4.260425 0.469308 2.096463 28.018198 0.513671 0.043157 0.060424  5.804184  3.519617 0.232082 0.688283 7.275860 0.132012 0.072369 0.152299
-____________________________________________________________________________________________________
-K-Means Confusion Matrix
-[[[26239  1134]
-  [25404  1969]]
-
- [[24166  3207]
-  [16114 11259]]
-
- [[17569 37177]
-  [    0     0]]]
-____________________________________________________________________________________________________
-____________________________________________________________________________________________________
-EM Means
-      0        1        2        3        4         5        6         7         8         9         10       11       12       13       14       15       16
-1.615178 5.759273 3.748437 0.288445 2.232315 25.157723 0.611056  0.330401  0.649263 12.646598 -6.297869 0.127076 1.008775 8.051820 0.186781 0.066112 0.127853
-1.257084 7.959138 4.678553 0.386087 2.461498 29.216690 0.535497 -0.010404 -0.036813  4.520090  7.616496 0.247322 0.706946 6.646518 0.260128 0.096986 0.089237
-0.060451 7.911327 4.449801 0.547691 2.073967 29.070744 0.455661  0.054018  0.084576  4.857509  3.903354 0.252958 0.681693 7.214740 0.101227 0.069847 0.153845
-____________________________________________________________________________________________________
-EM Confusion Matrix
-[[[23918  3455]
-  [26591   782]]
-
- [[22995  4378]
-  [15943 11430]]
-
- [[20045 34701]
-  [    0     0]]]
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.102s	0.239
-Silhouette analysis
-em       	2	0.156s	0.240
-Silhouette analysis
-k-means++	3	0.164s	0.232
-Silhouette analysis
-em       	3	0.248s	0.094
-Silhouette analysis
-k-means++	4	0.199s	0.107
-Silhouette analysis
-em       	4	0.347s	0.064
-Silhouette analysis
-k-means++	5	0.259s	0.088
-Silhouette analysis
-em       	5	0.775s	0.071
-
-PART 3 RESULTS FOR Heart Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 54746; # features 17
-____________________________________________________________________________________________________
-RCA performance on Heart Data 
-____________________________________________________________________________________________________
-Accuracy -23.4727010823453
-knn accuracy 0.750958904109589
 ICA performance on Heart Data 
 ____________________________________________________________________________________________________
+ICA Reconstruction Error 1.7078148266757058
 knn accuracy 0.7487671232876713
-RCA performance on Heart Data 
+RCA performance on Heart Data - iteration 1 
 ____________________________________________________________________________________________________
 knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+RCA performance on Heart Data - iteration 2 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+RCA performance on Heart Data - iteration 3 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+RCA performance on Heart Data - iteration 4 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+RCA performance on Heart Data - iteration 5 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
 LDA performance on Heart Data 
 ____________________________________________________________________________________________________
-Accuracy 0.7520547945205479
+LDA Accuracy 0.7520547945205479
 knn accuracy 0.7495890410958904
+
+PART 2 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+PCA Accuracy -13.764786615716293
+PCA Reconstruction Error 1.4845788347862073e-29
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+PCA Accuracy -14.965049819248792
+PCA Reconstruction Error 1.002901067020618
+knn accuracy 0.848103509393832
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 0.6130699600697708
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data - iteration 1 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+RCA performance on Weather Data - iteration 2 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+RCA performance on Weather Data - iteration 3 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+RCA performance on Weather Data - iteration 4 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+RCA performance on Weather Data - iteration 5 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+
+PART 3 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
 RESULTS FOR pca
 Silhouette analysis
-k-means++	2	0.101s	0.074
+k-means++	2	0.150s	0.243
 Silhouette analysis
-em       	2	0.184s	0.075
+em       	2	0.259s	0.248
 Silhouette analysis
-k-means++	3	0.137s	0.139
+k-means++	3	0.214s	0.233
 Silhouette analysis
-em       	3	0.253s	0.208
+em       	3	0.378s	0.092
 Silhouette analysis
-k-means++	4	0.212s	0.095
+k-means++	4	0.303s	0.105
 Silhouette analysis
-em       	4	0.347s	0.089
+em       	4	0.590s	0.062
 Silhouette analysis
-k-means++	5	0.232s	0.136
+k-means++	5	0.367s	0.086
 Silhouette analysis
-em       	5	0.462s	0.086
+em       	5	1.315s	0.068
 RESULTS FOR ica
 Silhouette analysis
-k-means++	2	0.111s	0.239
+k-means++	2	0.152s	0.239
 Silhouette analysis
-em       	2	0.157s	0.240
+em       	2	0.240s	0.240
 Silhouette analysis
-k-means++	3	0.154s	0.232
+k-means++	3	0.208s	0.232
 Silhouette analysis
-em       	3	0.206s	0.094
+em       	3	0.382s	0.094
 Silhouette analysis
-k-means++	4	0.195s	0.107
+k-means++	4	0.289s	0.107
 Silhouette analysis
-em       	4	0.341s	0.064
+em       	4	0.535s	0.064
 Silhouette analysis
-k-means++	5	0.262s	0.088
+k-means++	5	0.351s	0.088
 Silhouette analysis
-em       	5	0.796s	0.071
+em       	5	1.359s	0.071
 RESULTS FOR rca
 Silhouette analysis
-k-means++	2	0.149s	0.291
+k-means++	2	0.538s	0.291
 Silhouette analysis
-em       	2	0.244s	0.361
+em       	2	0.694s	0.361
 Silhouette analysis
-k-means++	3	0.150s	0.322
+k-means++	3	0.644s	0.322
 Silhouette analysis
-em       	3	0.568s	0.213
+em       	3	1.839s	0.213
 Silhouette analysis
-k-means++	4	0.151s	0.363
+k-means++	4	0.636s	0.363
 Silhouette analysis
-em       	4	0.753s	0.313
+em       	4	2.332s	0.313
 Silhouette analysis
-k-means++	5	0.259s	0.300
+k-means++	5	1.187s	0.300
 Silhouette analysis
-em       	5	1.208s	0.247
+em       	5	4.176s	0.247
 RESULTS FOR lda
 Silhouette analysis
-k-means++	2	0.098s	0.554
+k-means++	2	0.155s	0.554
 Silhouette analysis
-em       	2	0.095s	0.557
+em       	2	0.181s	0.557
 Silhouette analysis
-k-means++	3	0.133s	0.544
+k-means++	3	0.534s	0.544
 Silhouette analysis
-em       	3	0.126s	0.538
+em       	3	0.399s	0.538
 Silhouette analysis
-k-means++	4	0.156s	0.534
+k-means++	4	0.609s	0.534
 Silhouette analysis
-em       	4	0.152s	0.534
+em       	4	0.493s	0.534
 Silhouette analysis
-k-means++	5	0.175s	0.529
+k-means++	5	0.771s	0.529
 Silhouette analysis
-em       	5	0.185s	0.527
+em       	5	0.596s	0.527
 
 PART 3 RESULTS FOR Weather Data 
 ____________________________________________________________________________________________________
 # labels: 2; # samples: 56420; # features 13
 ____________________________________________________________________________________________________
-RCA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy -13.764786615716293
-knn accuracy 0.8554590570719603
-ICA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8503190358029068
-RCA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8404820985466147
-LDA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy 0.8527118043247075
-knn accuracy 0.8513824884792627
 RESULTS FOR pca
 Silhouette analysis
-k-means++	2	0.231s	0.205
+k-means++	2	0.267s	0.221
 Silhouette analysis
-em       	2	0.582s	0.208
+em       	2	1.085s	0.224
 Silhouette analysis
-k-means++	3	0.271s	0.121
+k-means++	3	0.342s	0.123
 Silhouette analysis
-em       	3	1.239s	0.073
+em       	3	2.142s	0.111
 Silhouette analysis
-k-means++	4	0.297s	0.090
+k-means++	4	0.397s	0.123
 Silhouette analysis
-em       	4	1.454s	0.041
+em       	4	0.857s	0.141
 Silhouette analysis
-k-means++	5	0.459s	0.091
+k-means++	5	0.532s	0.164
 Silhouette analysis
-em       	5	1.798s	0.026
+em       	5	5.095s	0.090
 RESULTS FOR ica
 Silhouette analysis
-k-means++	2	0.223s	0.210
+k-means++	2	0.199s	0.210
 Silhouette analysis
-em       	2	0.142s	0.209
+em       	2	0.152s	0.209
 Silhouette analysis
-k-means++	3	0.260s	0.115
+k-means++	3	0.234s	0.115
 Silhouette analysis
-em       	3	1.085s	0.094
+em       	3	0.729s	0.094
 Silhouette analysis
-k-means++	4	0.262s	0.135
+k-means++	4	0.232s	0.135
 Silhouette analysis
-em       	4	1.990s	0.112
+em       	4	2.020s	0.112
 Silhouette analysis
-k-means++	5	0.366s	0.132
+k-means++	5	0.349s	0.132
 Silhouette analysis
-em       	5	3.898s	0.047
+em       	5	3.041s	0.047
 RESULTS FOR rca
 Silhouette analysis
-k-means++	2	0.177s	0.254
+k-means++	2	0.180s	0.254
 Silhouette analysis
-em       	2	0.752s	0.070
+em       	2	0.684s	0.070
 Silhouette analysis
-k-means++	3	0.352s	0.252
+k-means++	3	0.350s	0.252
 Silhouette analysis
-em       	3	0.761s	0.028
+em       	3	0.710s	0.028
 Silhouette analysis
 k-means++	4	0.388s	0.180
 Silhouette analysis
-em       	4	0.958s	-0.013
+em       	4	1.014s	-0.013
 Silhouette analysis
-k-means++	5	0.300s	0.187
+k-means++	5	0.309s	0.187
 Silhouette analysis
-em       	5	2.140s	-0.048
+em       	5	2.143s	-0.048
 RESULTS FOR lda
 Silhouette analysis
-k-means++	2	0.098s	0.605
+k-means++	2	0.088s	0.605
 Silhouette analysis
-em       	2	0.083s	0.616
+em       	2	0.084s	0.616
 Silhouette analysis
-k-means++	3	0.132s	0.562
+k-means++	3	0.129s	0.562
 Silhouette analysis
 em       	3	0.123s	0.556
 Silhouette analysis
 k-means++	4	0.188s	0.536
 Silhouette analysis
-em       	4	0.166s	0.538
+em       	4	0.164s	0.538
 Silhouette analysis
-k-means++	5	0.228s	0.532
+k-means++	5	0.225s	0.532
 Silhouette analysis
-em       	5	0.188s	0.532
+em       	5	0.187s	0.532
 PART 4 RESULTS FOR Weather Data 
 ____________________________________________________________________________________________________
-# labels: 2; # samples: 56420; # features 13
-____________________________________________________________________________________________________
-RCA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy -13.764786615716293
-knn accuracy 0.8554590570719603
-ICA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8503190358029068
-RCA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8404820985466147
-LDA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy 0.8527118043247075
-knn accuracy 0.8513824884792627
-pca 
-____________________________________________________________________________________________________
-NEURAL NETWORK FOR Weather Data WITH 4 REDUCED DATA 
- ___________________________________________________
-PART 4 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 56420; # features 13
-____________________________________________________________________________________________________
-PCA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy -13.764786615716293
-knn accuracy 0.8554590570719603
-PCA performance on Weather Data - 8 components 
-____________________________________________________________________________________________________
-Accuracy -14.965049819248792
-knn accuracy 0.848103509393832
-ICA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8503190358029068
-RCA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8404820985466147
-LDA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy 0.8527118043247075
-knn accuracy 0.8513824884792627
-pca 
-____________________________________________________________________________________________________
-NEURAL NETWORK FOR Weather Data WITH 4 REDUCED DATA 
- ___________________________________________________
-PART 4 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 56420; # features 13
-____________________________________________________________________________________________________
-PCA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy -13.764786615716293
-knn accuracy 0.8554590570719603
-PCA performance on Weather Data - 8 components 
-____________________________________________________________________________________________________
-Accuracy -14.965049819248792
-knn accuracy 0.848103509393832
-ICA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8503190358029068
-RCA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8404820985466147
-LDA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy 0.8527118043247075
-knn accuracy 0.8513824884792627
 pca 
 ____________________________________________________________________________________________________
 NEURAL NETWORK FOR Weather Data WITH pca REDUCED DATA 
  ___________________________________________________
 Tuned hyperparams for: Neural Network on dataset: Weather Data 
- Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
-Fit time: 10.52472638686498
-Score time: 0.004670841164059109
-PART 4 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 56420; # features 13
-____________________________________________________________________________________________________
-PCA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy -13.764786615716293
-knn accuracy 0.8554590570719603
-PCA performance on Weather Data - 8 components 
-____________________________________________________________________________________________________
-Accuracy -14.965049819248792
-knn accuracy 0.848103509393832
-ICA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8503190358029068
-RCA performance on Weather Data 
-____________________________________________________________________________________________________
-knn accuracy 0.8404820985466147
-LDA performance on Weather Data 
-____________________________________________________________________________________________________
-Accuracy 0.8527118043247075
-knn accuracy 0.8513824884792627
-pca 
-____________________________________________________________________________________________________
-NEURAL NETWORK FOR Weather Data WITH pca REDUCED DATA 
- ___________________________________________________
-Tuned hyperparams for: Neural Network on dataset: Weather Data 
- Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
-Fit time: 10.076780800024666
-Score time: 0.004666362868414984
-Train accuracy: 0.8515375753278979 | Test accuracy: 0.8490783410138248
+ Params: {'activation': 'relu', 'alpha': 0.01, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 9.544296875264909
+Score time: 0.004045870569017198
+Train accuracy: 0.852844735909252 | Test accuracy: 0.847217298830202
 ica 
 ____________________________________________________________________________________________________
 NEURAL NETWORK FOR Weather Data WITH ica REDUCED DATA 
  ___________________________________________________
 Tuned hyperparams for: Neural Network on dataset: Weather Data 
- Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
-Fit time: 9.818643621603648
-Score time: 0.004785953627692328
-Train accuracy: 0.8527782701169798 | Test accuracy: 0.8517369727047146
+ Params: {'activation': 'relu', 'alpha': 0.0001, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 5.399529520670574
+Score time: 0.005510249402787951
+Train accuracy: 0.8463089330024814 | Test accuracy: 0.848546614675647
 rca 
 ____________________________________________________________________________________________________
 NEURAL NETWORK FOR Weather Data WITH rca REDUCED DATA 
  ___________________________________________________
-Tuned hyperparams for: Neural Network on dataset: Weather Data 
- Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
-Fit time: 8.980304368336995
-Score time: 0.004509431786007352
-Train accuracy: 0.8537531017369727 | Test accuracy: 0.8552818149592343
-lda 
-____________________________________________________________________________________________________
-NEURAL NETWORK FOR Weather Data WITH lda REDUCED DATA 
- ___________________________________________________
-Tuned hyperparams for: Neural Network on dataset: Weather Data 
- Params: {'activation': 'relu', 'alpha': 0.0001, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20,), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
-Fit time: 2.962257738908132
-Score time: 0.0037120713127983948
-Train accuracy: 0.8498980857851826 | Test accuracy: 0.8540411201701524
-Original Data 
-____________________________________________________________________________________________________
-NEURAL NETWORK FOR Weather Data WITH Original Data REDUCED DATA 
- ___________________________________________________
-Tuned hyperparams for: Neural Network on dataset: Weather Data 
- Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
-Fit time: 12.168449025683934
-Score time: 0.005102769533793132
-Train accuracy: 0.8595799361928395 | Test accuracy: 0.8552818149592343
-PART 5 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 56420; # features 13
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.182s	0.202
-Silhouette analysis
-em       	2	0.475s	0.203
-Silhouette analysis
-k-means++	3	0.204s	0.179
-Silhouette analysis
-em       	3	0.808s	0.056
-Silhouette analysis
-k-means++	4	0.665s	0.144
-Silhouette analysis
-em       	4	1.851s	0.008
-Silhouette analysis
-k-means++	5	0.354s	0.154
-Silhouette analysis
-em       	5	1.671s	-0.001
-PART 5 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.199s	0.202
-Silhouette analysis
-em       	2	0.346s	0.204
-Silhouette analysis
-k-means++	3	0.168s	0.181
-Silhouette analysis
-em       	3	0.944s	0.075
-Silhouette analysis
-k-means++	4	0.326s	0.150
-Silhouette analysis
-em       	4	2.176s	0.032
-Silhouette analysis
-k-means++	5	0.345s	0.154
-Silhouette analysis
-em       	5	1.369s	-0.007
-PART 5 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.178s	0.202
-Silhouette analysis
-em       	2	0.364s	0.204
-Silhouette analysis
-k-means++	3	0.175s	0.181
-Silhouette analysis
-em       	3	0.910s	0.075
-Silhouette analysis
-k-means++	4	0.351s	0.150
-Silhouette analysis
-em       	4	2.201s	0.032
-Silhouette analysis
-k-means++	5	0.379s	0.154
-Silhouette analysis
-em       	5	1.148s	-0.007
-PART 5 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.190s	0.202
-Silhouette analysis
-em       	2	0.402s	0.204
-Silhouette analysis
-k-means++	3	0.186s	0.181
-Silhouette analysis
-em       	3	0.948s	0.075
-Silhouette analysis
-k-means++	4	0.370s	0.150
-Silhouette analysis
-em       	4	2.195s	0.032
-Silhouette analysis
-k-means++	5	0.380s	0.154
-Silhouette analysis
-em       	5	1.104s	-0.007
-PART 5 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.176s	0.202
-Silhouette analysis
-em       	2	0.360s	0.204
-Silhouette analysis
-k-means++	3	0.179s	0.181
-Silhouette analysis
-em       	3	0.885s	0.075
-Silhouette analysis
-k-means++	4	0.342s	0.150
-Silhouette analysis
-em       	4	2.197s	0.032
-Silhouette analysis
-k-means++	5	0.342s	0.154
-Silhouette analysis
-em       	5	1.063s	-0.007
-PART 5 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.176s	0.202
-Silhouette analysis
-em       	2	0.380s	0.204
-Silhouette analysis
-k-means++	3	0.177s	0.181
-Silhouette analysis
-em       	3	0.906s	0.075
-Silhouette analysis
-k-means++	4	0.345s	0.150
-Silhouette analysis
-em       	4	2.179s	0.032
-Silhouette analysis
-k-means++	5	0.343s	0.154
-Silhouette analysis
-em       	5	1.207s	-0.007
-PART 5 RESULTS FOR Weather Data 
-____________________________________________________________________________________________________
-Silhouette analysis
-k-means++	2	0.151s	0.202
-Silhouette analysis
-em       	2	0.334s	0.204
-Silhouette analysis
-k-means++	3	0.174s	0.181
-Silhouette analysis
-em       	3	1.691s	0.075
-Silhouette analysis
-k-means++	4	0.311s	0.150
-Silhouette analysis
-em       	4	2.205s	0.032
-Silhouette analysis
-k-means++	5	0.320s	0.154
-Silhouette analysis
-em       	5	1.083s	-0.007
-NEURAL NETWORK FOR Weather Data WITH Cluster REDUCED DATA 
- ___________________________________________________
-Tuned hyperparams for: Neural Network on dataset: Weather Data 
- Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
-Fit time: 12.914826975928413
-Score time: 0.004880004458957248
-Train accuracy: 0.861906238922368 | Test accuracy: 0.858649415101028
-PART 1 RESULTS FOR Heart Data 
-____________________________________________________________________________________________________
-# labels: 2; # samples: 54746; # features 17
-____________________________________________________________________________________________________
