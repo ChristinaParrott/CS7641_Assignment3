@@ -347,6 +347,7 @@ class experiments:
             x_train, x_test, y_train, y_test = self.split_data(x, y)
             pca.fit(x_train, y_train)
             self.write_to_output(f"PCA performance on {data_set} \n" + 100 * "_")
+
             self.score_dim_red(pca, x_test, y_test, 'PCA')
             self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
 
@@ -358,9 +359,13 @@ class experiments:
         x_pca = pca.fit_transform(x)
         if gen_results:
             x_train, x_test, y_train, y_test = self.split_data(x, y)
+            t1 = perf_counter()
             pca.fit(x_train, y_train)
+            t2 = perf_counter()
             self.write_to_output(f"PCA performance on {data_set} - {n} components \n" + 100 * "_")
+            self.write_to_output(f"fit time: {t2 - t1}")
             self.score_dim_red(pca, x_test, y_test, 'PCA')
+            self.knn_no_reduction(x_train, y_train, x_test, y_test)
             self.bench_on_knn(pca, x_train, y_train, x_test, y_test)
         return x_pca, pca
 
@@ -379,8 +384,11 @@ class experiments:
         ica = FastICA(n_components=n, random_state=self.random_seed)
         if gen_results:
             x_train, x_test, y_train, y_test = self.split_data(x, y)
+            t1 = perf_counter()
             ica.fit(x_train, y_train)
-            self.write_to_output(f"ICA performance on {data_set} \n" + 100 * "_")
+            t2 = perf_counter()
+            self.write_to_output(f"ICA performance on {data_set} - {n} components \n" + 100 * "_")
+            self.write_to_output(f"fit time: {t2 - t1}")
             self.score_dim_red(ica, x_test, y_test, 'ICA')
             self.bench_on_knn(ica, x_train, y_train, x_test, y_test)
         return ica.fit_transform(x), ica
@@ -389,31 +397,50 @@ class experiments:
         plt.figure(f"RCA{part}")
         n_components = range(1, x.shape[1] + 1)
         kurtosis = pd.DataFrame(index=n_components, columns=['kurtosis'])
-        for n in n_components:
-            rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
-            k = pd.DataFrame(rca.fit_transform(x)).kurtosis().abs().mean()
-            kurtosis.loc[n, 'kurtosis'] = k
-        if gen_results:
-            plt.plot(kurtosis, label=f"{data_set} Kurtosis")
-
-        n = kurtosis['kurtosis'].astype('float').idxmax()
         for i in range(1, 6):
-            rca = SparseRandomProjection(n_components=n, random_state=self.random_seed)
+            for n in n_components:
+                rca = SparseRandomProjection(n_components=n, random_state=self.random_seed + i)
+                k = pd.DataFrame(rca.fit_transform(x)).kurtosis().abs().mean()
+                kurtosis.loc[n, 'kurtosis'] = k
+            if gen_results:
+                plt.plot(kurtosis, label=f"{data_set} Kurtosis - iteration {i}")
+
+            n = kurtosis['kurtosis'].astype('float').idxmax()
+
+            rca = SparseRandomProjection(n_components=n, random_state=self.random_seed + i)
             if gen_results:
                 x_train, x_test, y_train, y_test = self.split_data(x, y)
+                t1 = perf_counter()
                 rca.fit(x_train, y_train)
-                self.write_to_output(f"RCA performance on {data_set} - iteration {i} \n" + 100 * "_")
+                t2 = perf_counter()
+                self.write_to_output(f"RCA performance on {data_set} - iteration {i} - {n} components \n" + 100 * "_")
+                self.write_to_output(f"fit time: {t2 - t1}")
                 self.bench_on_knn(rca, x_train, y_train, x_test, y_test)
                 self.score_dim_red(rca, x_test, y_test, 'RCA')
             i += 1
+        self.kurtosis_plot('RCA', part, data_set)
         return rca.fit_transform(x), rca
 
     def run_lda(self, x, y, data_set, part, gen_results=True):
         lda = LinearDiscriminantAnalysis(solver='svd', store_covariance=True)
         if gen_results:
             x_train, x_test, y_train, y_test = self.split_data(x, y)
+            t1 = perf_counter()
             lda.fit(x_train, y_train)
+            t2 = perf_counter()
+            lda_t = lda.fit_transform(x_train, y_train)
+            lda_p = lda.predict(x_train)
+            plt.figure('lda'+part+data_set)
+            plt.scatter(
+                range(0, lda_t.shape[0]), lda_t, c=lda_p, cmap='rainbow',
+                alpha=0.7, edgecolors='b'
+            )
+            plt.xlabel('Samples')
+            plt.ylabel('Component Value')
+            plt.title(f'LDA Labels for {data_set}')
+            plt.savefig(f'images/part{part}/LDA_Labels_{data_set}.png')
             self.write_to_output(f"LDA performance on {data_set} \n" + 100 * "_")
+            self.write_to_output(f"fit time: {t2 - t1}")
             self.score_dim_red(lda, x_test, y_test, 'LDA')
             self.bench_on_knn(lda, x_train, y_train, x_test, y_test)
         return lda.fit_transform(x, y), lda
@@ -436,17 +463,30 @@ class experiments:
     def bench_on_knn(self, model, x_train, y_train, x_test, y_test):
         knn = KNeighborsClassifier(n_neighbors=50)
         knn.fit(model.transform(x_train), y_train)
-        acc_knn = knn.score(model.transform(x_test), y_test)
+        x_trans = model.transform(x_test)
+        t1 = perf_counter()
+        acc_knn = knn.score(x_trans, y_test)
+        t2 = perf_counter()
+        self.write_to_output(f"knn query time {t2 - t1}")
         self.write_to_output(f"knn accuracy {acc_knn}")
 
-    def kurtosis_plot(self, algorithm, part):
+    def knn_no_reduction(self, x_train, y_train, x_test, y_test):
+        knn = KNeighborsClassifier(n_neighbors=50)
+        knn.fit(x_train, y_train)
+        t1 = perf_counter()
+        acc_knn = knn.score(x_test, y_test)
+        t2 = perf_counter()
+        self.write_to_output(f"knn query time {t2 - t1}")
+        self.write_to_output(f"knn accuracy no reduction {acc_knn}")
+
+    def kurtosis_plot(self, algorithm, part, data_set=''):
         plt.figure(algorithm+part)
         plt.ylabel('Kurtosis')
         plt.xlabel('n_components')
         plt.title(f"Average kurtosis for n_components for {algorithm}")
         plt.legend(loc='best')
         plt.tight_layout()
-        plt.savefig(f'images/part{part}/{algorithm}_kurtosis.png')
+        plt.savefig(f'images/part{part}/{algorithm}_kurtosis_{data_set}.png')
         plt.close()
 
     def run_kmeans_sa(self, scaled_data, data_set, part, algo=''):
@@ -463,7 +503,7 @@ class experiments:
         plt.savefig(f'images/part{part}/{data_set}_KM_Silhouette_Analysis_{algo}.png')
         plt.close()
 
-    def run_kmeans_em(self, scaled_data, data_set, part, algo='', gen_results=True):
+    def run_kmeans_em(self, scaled_data, data_set, part='', algo='', gen_results=True):
         plt.figure(part + algo + data_set)
         em_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
         kmeans_results = pd.DataFrame(columns=['clusters', 'fit_time', 'silhouette'])
@@ -656,9 +696,9 @@ class experiments:
         self.write_to_output(f"PART 5 RESULTS FOR {data_set} \n" + 100 * "_")
         x_train, y_train, x_test, y_test, scaler = self.data_prep_nn(data_set)
 
-        best_kmeans_n, best_em_n = self.run_kmeans_em(x_train, data_set, '5', False)
-        kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, x_train, None, data_set, '5', False)
-        em, em_pred = self.run_em(best_em_n, x_train, None, data_set, '5', False)
+        best_kmeans_n, best_em_n = self.run_kmeans_em(x_train, data_set, '5', '', False)
+        kmeans, kmeans_pred = self.run_kmeans(best_kmeans_n, x_train, None, data_set, '5', '', False)
+        em, em_pred = self.run_em(best_em_n, x_train, None, data_set, '5', '',  False)
 
         x_train = np.column_stack((x_train, kmeans_pred))
         x_train = np.column_stack((x_train, em_pred))

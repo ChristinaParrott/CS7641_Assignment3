@@ -7,3 +7,4 @@ dependencies:
   - scikit-learn=1.1.2
   - seaborn=0.12.1
   - yellowbrick
+  - time

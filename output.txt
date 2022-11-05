@@ -314,3 +314,534 @@ rca
 ____________________________________________________________________________________________________
 NEURAL NETWORK FOR Weather Data WITH rca REDUCED DATA 
  ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.01, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 9.383728131983014
+Score time: 0.0049416912926567936
+Train accuracy: 0.8569213045019497 | Test accuracy: 0.8564338886919532
+lda 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH lda REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.01, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 2.9005585498279993
+Score time: 0.0036933713489108616
+Train accuracy: 0.8502525700106345 | Test accuracy: 0.8538638780574265
+Original Data 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH Original Data REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 10.468577048513625
+Score time: 0.00449855195151435
+Train accuracy: 0.8595799361928395 | Test accuracy: 0.8552818149592343
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH Cluster REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 11.249372182952033
+Score time: 0.003961733976999919
+Train accuracy: 0.861906238922368 | Test accuracy: 0.858649415101028
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH Cluster REDUCED DATA 
+ ___________________________________________________
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+
+PART 2 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
+PCA performance on Heart Data 
+____________________________________________________________________________________________________
+PCA Accuracy -23.4727010823453
+PCA Reconstruction Error 3.029053928447677e-29
+knn accuracy 0.750958904109589
+PCA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+PCA Accuracy -23.48487974672447
+PCA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+
+PART 2 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
+PCA performance on Heart Data 
+____________________________________________________________________________________________________
+PCA Accuracy -23.4727010823453
+PCA Reconstruction Error 3.029053928447677e-29
+knn accuracy 0.750958904109589
+PCA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+PCA Accuracy -23.48487974672447
+PCA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+ICA performance on Heart Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+RCA performance on Heart Data - iteration 1 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+RCA performance on Heart Data - iteration 2 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+RCA performance on Heart Data - iteration 3 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+RCA performance on Heart Data - iteration 4 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+RCA performance on Heart Data - iteration 5 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+LDA performance on Heart Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.7520547945205479
+knn accuracy 0.7495890410958904
+
+PART 2 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+PCA Accuracy -13.764786615716293
+PCA Reconstruction Error 1.4845788347862073e-29
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+PCA Accuracy -14.965049819248792
+PCA Reconstruction Error 1.002901067020618
+knn accuracy 0.848103509393832
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 0.6130699600697708
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data - iteration 1 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+RCA performance on Weather Data - iteration 2 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+RCA performance on Weather Data - iteration 3 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+RCA performance on Weather Data - iteration 4 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+RCA performance on Weather Data - iteration 5 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH Cluster REDUCED DATA 
+ ___________________________________________________
+
+PART 2 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
+PCA performance on Heart Data 
+____________________________________________________________________________________________________
+PCA Accuracy -23.4727010823453
+PCA Reconstruction Error 3.029053928447677e-29
+knn accuracy 0.750958904109589
+PCA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+PCA Accuracy -23.48487974672447
+PCA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+ICA performance on Heart Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+
+PART 2 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
+PCA performance on Heart Data 
+____________________________________________________________________________________________________
+PCA Accuracy -23.4727010823453
+PCA Reconstruction Error 3.029053928447677e-29
+knn accuracy 0.750958904109589
+PCA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+PCA Accuracy -23.48487974672447
+PCA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+ICA performance on Heart Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+RCA performance on Heart Data 
+____________________________________________________________________________________________________
+knn accuracy 0.6749771689497717
+RCA Reconstruction Error 12.863717713980996
+LDA performance on Heart Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.7520547945205479
+knn accuracy 0.7495890410958904
+
+PART 2 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+PCA Accuracy -13.764786615716293
+PCA Reconstruction Error 1.4845788347862073e-29
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+PCA Accuracy -14.965049819248792
+PCA Reconstruction Error 1.002901067020618
+knn accuracy 0.848103509393832
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 0.6130699600697708
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data 
+____________________________________________________________________________________________________
+knn accuracy 0.8404820985466147
+RCA Reconstruction Error 4.392665730735101
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+
+PART 2 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
+PCA performance on Heart Data 
+____________________________________________________________________________________________________
+PCA Accuracy -23.4727010823453
+PCA Reconstruction Error 3.029053928447677e-29
+knn accuracy 0.750958904109589
+PCA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+PCA Accuracy -23.48487974672447
+PCA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+ICA performance on Heart Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+RCA performance on Heart Data - iteration 1 
+____________________________________________________________________________________________________
+knn accuracy 0.7288584474885845
+RCA Reconstruction Error 7.27665780664102
+RCA performance on Heart Data - iteration 2 
+____________________________________________________________________________________________________
+knn accuracy 0.6752511415525114
+RCA Reconstruction Error 12.159461185697554
+RCA performance on Heart Data - iteration 3 
+____________________________________________________________________________________________________
+knn accuracy 0.6560730593607306
+RCA Reconstruction Error 16.026512712165086
+RCA performance on Heart Data - iteration 4 
+____________________________________________________________________________________________________
+knn accuracy 0.7433789954337899
+RCA Reconstruction Error 1.9698371620371868
+RCA performance on Heart Data - iteration 5 
+____________________________________________________________________________________________________
+knn accuracy 0.6752511415525114
+RCA Reconstruction Error 12.159461185697554
+LDA performance on Heart Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.7520547945205479
+knn accuracy 0.7495890410958904
+
+PART 2 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+PCA Accuracy -13.764786615716293
+PCA Reconstruction Error 1.4845788347862073e-29
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+PCA Accuracy -14.965049819248792
+PCA Reconstruction Error 1.002901067020618
+knn accuracy 0.848103509393832
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 0.6130699600697708
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data - iteration 1 
+____________________________________________________________________________________________________
+knn accuracy 0.8467741935483871
+RCA Reconstruction Error 2.4295867850608044
+RCA performance on Weather Data - iteration 2 
+____________________________________________________________________________________________________
+knn accuracy 0.7978553704360156
+RCA Reconstruction Error 12.06540324345229
+RCA performance on Weather Data - iteration 3 
+____________________________________________________________________________________________________
+knn accuracy 0.7907656859269763
+RCA Reconstruction Error 9.837818111610678
+RCA performance on Weather Data - iteration 4 
+____________________________________________________________________________________________________
+knn accuracy 0.83649415101028
+RCA Reconstruction Error 6.243364879196125
+RCA performance on Weather Data - iteration 5 
+____________________________________________________________________________________________________
+knn accuracy 0.8467741935483871
+RCA Reconstruction Error 2.4295867850608044
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH Cluster REDUCED DATA 
+ ___________________________________________________
+
+PART 2 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
+PCA performance on Heart Data 
+____________________________________________________________________________________________________
+PCA Accuracy -23.4727010823453
+PCA Reconstruction Error 3.029053928447677e-29
+knn accuracy 0.750958904109589
+PCA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+PCA Accuracy -23.48487974672447
+PCA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+ICA performance on Heart Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 1.7078148266757058
+knn accuracy 0.7487671232876713
+RCA performance on Heart Data - iteration 1 
+____________________________________________________________________________________________________
+knn accuracy 0.7288584474885845
+RCA Reconstruction Error 7.27665780664102
+RCA performance on Heart Data - iteration 2 
+____________________________________________________________________________________________________
+knn accuracy 0.6752511415525114
+RCA Reconstruction Error 12.159461185697554
+RCA performance on Heart Data - iteration 3 
+____________________________________________________________________________________________________
+knn accuracy 0.6560730593607306
+RCA Reconstruction Error 16.026512712165086
+RCA performance on Heart Data - iteration 4 
+____________________________________________________________________________________________________
+knn accuracy 0.7433789954337899
+RCA Reconstruction Error 1.9698371620371868
+RCA performance on Heart Data - iteration 5 
+____________________________________________________________________________________________________
+knn accuracy 0.6752511415525114
+RCA Reconstruction Error 12.159461185697554
+LDA performance on Heart Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.7520547945205479
+knn accuracy 0.7495890410958904
+
+PART 2 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+PCA Accuracy -13.764786615716293
+PCA Reconstruction Error 1.4845788347862073e-29
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+PCA Accuracy -14.965049819248792
+PCA Reconstruction Error 1.002901067020618
+knn accuracy 0.848103509393832
+ICA performance on Weather Data 
+____________________________________________________________________________________________________
+ICA Reconstruction Error 0.6130699600697708
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data - iteration 1 
+____________________________________________________________________________________________________
+knn accuracy 0.8467741935483871
+RCA Reconstruction Error 2.4295867850608044
+RCA performance on Weather Data - iteration 2 
+____________________________________________________________________________________________________
+knn accuracy 0.7978553704360156
+RCA Reconstruction Error 12.06540324345229
+RCA performance on Weather Data - iteration 3 
+____________________________________________________________________________________________________
+knn accuracy 0.7907656859269763
+RCA Reconstruction Error 9.837818111610678
+RCA performance on Weather Data - iteration 4 
+____________________________________________________________________________________________________
+knn accuracy 0.83649415101028
+RCA Reconstruction Error 6.243364879196125
+RCA performance on Weather Data - iteration 5 
+____________________________________________________________________________________________________
+knn accuracy 0.8467741935483871
+RCA Reconstruction Error 2.4295867850608044
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+LDA Accuracy 0.8527118043247075
+knn accuracy 0.8513824884792627
+PART 5 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+NEURAL NETWORK FOR Weather Data WITH Cluster REDUCED DATA 
+ ___________________________________________________
+Tuned hyperparams for: Neural Network on dataset: Weather Data 
+ Params: {'activation': 'relu', 'alpha': 0.1, 'batch_size': 'auto', 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': False, 'epsilon': 1e-08, 'hidden_layer_sizes': (20, 20, 20), 'learning_rate': 'constant', 'learning_rate_init': 0.001, 'max_fun': 15000, 'max_iter': 1000, 'momentum': 0.9, 'n_iter_no_change': 10, 'nesterovs_momentum': True, 'power_t': 0.5, 'random_state': 910117883, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False, 'warm_start': False}
+Fit time: 11.657832659615408
+Score time: 0.005547853310902915
+
+
+PART 2 RESULTS FOR Heart Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 54746; # features 17
+____________________________________________________________________________________________________
+PCA performance on Heart Data 
+____________________________________________________________________________________________________
+PCA Accuracy -23.4727010823453
+PCA Reconstruction Error 3.029053928447677e-29
+knn query time 0.6895197997801006
+knn accuracy 0.750958904109589
+PCA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+fit time: 0.019593299832195044
+PCA Accuracy -23.48487974672447
+PCA Reconstruction Error 1.7078148266757058
+knn query time 0.6324715996161103
+knn accuracy no reduction 0.750958904109589
+knn query time 3.921310099773109
+knn accuracy 0.7487671232876713
+ICA performance on Heart Data - 14 components 
+____________________________________________________________________________________________________
+fit time: 0.25942050013691187
+ICA Reconstruction Error 1.7078148266757058
+knn query time 6.318037500139326
+knn accuracy 0.7487671232876713
+RCA performance on Heart Data - iteration 1 - 10 components 
+____________________________________________________________________________________________________
+fit time: 0.0015110000967979431
+knn query time 1.5301726004108787
+knn accuracy 0.7363470319634703
+RCA Reconstruction Error 6.831727258191132
+RCA performance on Heart Data - iteration 2 - 5 components 
+____________________________________________________________________________________________________
+fit time: 0.0014965999871492386
+knn query time 0.5844747996889055
+knn accuracy 0.7157077625570776
+RCA Reconstruction Error 11.594110071192727
+RCA performance on Heart Data - iteration 3 - 1 components 
+____________________________________________________________________________________________________
+fit time: 0.0016243001446127892
+knn query time 2.8589844997040927
+knn accuracy 0.5524200913242009
+RCA Reconstruction Error 15.97242381135037
+RCA performance on Heart Data - iteration 4 - 15 components 
+____________________________________________________________________________________________________
+fit time: 0.0014565996825695038
+knn query time 2.912270599976182
+knn accuracy 0.7419178082191781
+RCA Reconstruction Error 2.0234712700748956
+RCA performance on Heart Data - iteration 5 - 5 components 
+____________________________________________________________________________________________________
+fit time: 0.0014994996599853039
+knn query time 0.3902932000346482
+knn accuracy 0.6757077625570777
+RCA Reconstruction Error 11.906204202610052
+LDA performance on Heart Data 
+____________________________________________________________________________________________________
+fit time: 0.0810724999755621
+LDA Accuracy 0.7520547945205479
+knn query time 0.2068286999128759
+knn accuracy 0.7495890410958904
+
+PART 2 RESULTS FOR Weather Data 
+____________________________________________________________________________________________________
+# labels: 2; # samples: 56420; # features 13
+____________________________________________________________________________________________________
+PCA performance on Weather Data 
+____________________________________________________________________________________________________
+PCA Accuracy -13.764786615716293
+PCA Reconstruction Error 1.4845788347862073e-29
+knn query time 3.375451900064945
+knn accuracy 0.8554590570719603
+PCA performance on Weather Data - 8 components 
+____________________________________________________________________________________________________
+fit time: 0.0664329999126494
+PCA Accuracy -14.965049819248792
+PCA Reconstruction Error 1.002901067020618
+knn query time 4.014730699826032
+knn accuracy no reduction 0.8554590570719603
+knn query time 1.1772619001567364
+knn accuracy 0.848103509393832
+ICA performance on Weather Data - 9 components 
+____________________________________________________________________________________________________
+fit time: 0.13779560010880232
+ICA Reconstruction Error 0.6130699600697708
+knn query time 2.9974893000908196
+knn accuracy 0.8503190358029068
+RCA performance on Weather Data - iteration 1 - 12 components 
+____________________________________________________________________________________________________
+fit time: 0.0012126998044550419
+knn query time 2.0576500999741256
+knn accuracy 0.8501417936901808
+RCA Reconstruction Error 1.41927755119442
+RCA performance on Weather Data - iteration 2 - 1 components 
+____________________________________________________________________________________________________
+fit time: 0.001321100164204836
+knn query time 0.24423390021547675
+knn accuracy 0.7923608649415101
+RCA Reconstruction Error 12.412810906467929
+RCA performance on Weather Data - iteration 3 - 4 components 
+____________________________________________________________________________________________________
+fit time: 0.0012059998698532581
+knn query time 0.35536190029233694
+knn accuracy 0.8459766040411202
+RCA Reconstruction Error 9.123068853592574
+RCA performance on Weather Data - iteration 4 - 8 components 
+____________________________________________________________________________________________________
+fit time: 0.0014215996488928795
+knn query time 1.4689877997152507
+knn accuracy 0.8284296348812478
+RCA Reconstruction Error 4.868842057190955
+RCA performance on Weather Data - iteration 5 - 12 components 
+____________________________________________________________________________________________________
+fit time: 0.0013927998952567577
+knn query time 1.9627295997925103
+knn accuracy 0.8502304147465438
+RCA Reconstruction Error 0.9968892952046624
+LDA performance on Weather Data 
+____________________________________________________________________________________________________
+fit time: 0.06880380026996136
+LDA Accuracy 0.8527118043247075
+knn query time 0.196028099860996
+knn accuracy 0.8513824884792627
